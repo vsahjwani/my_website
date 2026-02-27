@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a3a6b;
+    --ink-dark: #0d2347;
+    --ink-light: #4a6fa5;
+    --ink-faint: #b8cce4;
+    --paper: #fafaf7;
+    --paper-warm: #f5f4ef;
+    --paper-line: #dde8f4;
+    --red-pen: #c0392b;
+    --pencil-mark: #8fa8c8;
+    --highlight: #fff9c4;
+    --highlight-pink: #ffe0e0;
+    --green-ink: #2d6a4f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Kalam', cursive;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z' fill='%231a3a6b'/%3E%3C/svg%3E") 0 24, auto;
+  }
+
+  /* ============ PAPER TEXTURE ============ */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        var(--paper-line) 31px,
+        var(--paper-line) 32px
+      );
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(250,250,247,0.92);
+    backdrop-filter: blur(4px);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .nav-logo {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.7rem, 3.5vw, 3rem);
+    font-weight: 700;
+    color: var(--ink-dark);
+    text-decoration: none;
+    position: relative;
+  }
+
+  .nav-logo::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--ink);
+    transform: rotate(-1deg);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    color: var(--ink);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--ink);
+    transition: width 0.3s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .nav-links a:hover::after { width: 100%; }
+  .nav-links a:hover { color: var(--ink-dark); }
+
+  /* ============ SECTIONS ============ */
+  section {
+    min-height: 100vh;
+    padding: 100px 60px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============ HOME ============ */
+  #home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10%;
+    overflow: hidden;
+  }
+
+  .home-paper {
+    position: relative;
+    max-width: 700px;
+  }
+
+  .sticky-note {
+    position: absolute;
+    background: var(--highlight);
+    padding: 12px 16px;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.15);
+    transform: rotate(3deg);
+    z-index: 5;
+  }
+
+  .sticky-note-pink {
+    background: var(--highlight-pink);
+    transform: rotate(-2deg);
+  }
+
+  .name-heading {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 950;
+    color: var(--ink-dark);
+    line-height: 1.1;
+    position: relative;
+    margin-top: 40px;
+  }
+
+  .name-heading .underline-drawn {
+    position: relative;
+    display: inline-block;
+  }
+
+  .name-heading .underline-drawn svg {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .tagline {
+    font-family: 'Patrick Hand', cursive;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--ink-light);
+    margin-top: 20px;
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  .cta-btn {
+    margin-top: 36px;
+    display: inline-block;
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1rem, 2vw, 2rem);
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 12px 24px;
+    border: 2px solid var(--ink-dark);
+    text-decoration: none;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 4px 4px 0 var(--ink-dark);
+    transform: rotate(-0.5deg);
+  }
+
+  .cta-btn:hover {
+    transform: rotate(-0.5deg) translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink-dark);
+  }
+
+  /* Interactive paper doodles */
+  .doodle-canvas {
+    position: absolute;
+    right: -80px;
+    top: -60px;
+    width: 420px;
+    height: 420px;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  /* ============ SCROLL INDICATOR ============ */
+  .scroll-arrow {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--ink-light);
+    text-align: center;
+  }
+
+  @keyframes bounceDown {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ============ ABOUT ============ */
+  #about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 120px;
+  }
+
+  .section-label {
+    font-family: 'Architects Daughter', cursive;
+    font-size: 0.85rem;
+    color: var(--red-pen);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::before {
+    content: '→';
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    color: var(--ink-dark);
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+
+  .about-text {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--ink);
+  }
+
+  .about-text p + p { margin-top: 16px; }
+
+  .photo-frame {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .photo-placeholder {
+    width: 280px;
+    height: 320px;
+    background: var(--paper-warm);
+    border: 2px solid var(--ink);
+    position: relative;
+    box-shadow: 8px 8px 0 var(--ink-faint);
+    transform: rotate(1.5deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .photo-placeholder svg {
+    opacity: 0.3;
+  }
+
+  .photo-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    color: var(--ink-light);
+    position: absolute;
+    bottom: -28px;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+
+  .tape {
+    position: absolute;
+    background: rgba(180,200,230,0.4);
+    border: 1px solid rgba(180,200,230,0.5);
+    width: 60px;
+    height: 20px;
+  }
+
+  .tape-top { top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
+  .tape-left { left: -10px; top: 40%; transform: rotate(90deg) translateX(-50%); }
+
+  /* ============ SKILLS PILLS ============ */
+  .skills-wrap {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .skill-pill {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    padding: 6px 16px;
+    border: 2px solid var(--ink);
+    background: transparent;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .skill-pill:hover { background: var(--highlight); }
+
+  /* ============ EXPERIENCES ============ */
+  #experiences {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 120px;
+  }
+
+  .tab-switcher {
+    display: flex;
+    gap: 4px;
+    margin: 32px 0 48px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 0;
+  }
+
+  .tab-btn {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    padding: 10px 28px;
+    border: 2px solid var(--ink);
+    border-bottom: none;
+    background: var(--paper-warm);
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -2px;
+  }
+
+  .tab-btn.active {
+    background: var(--paper);
+    color: var(--ink-dark);
+    font-weight: 700;
+    border-bottom: 2px solid var(--paper);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    bottom: 0;
+    width: 2px;
+    background: repeating-linear-gradient(
+      to bottom,
+      var(--ink) 0,
+      var(--ink) 6px,
+      transparent 6px,
+      transparent 12px
+    );
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -36px;
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    border-radius: 50%;
+  }
+
+  .timeline-dot::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+
+  .timeline-date {
+    font-family: 'Architects Daughter', cursive;
+    font-size: 0.85rem;
+    color: var(--red-pen);
+    margin-bottom: 6px;
+  }
+
+  .timeline-role {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink-dark);
+  }
+
+  .timeline-company {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1rem;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+
+  .timeline-desc {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--ink);
+    max-width: 700px;
+  }
+
+  .timeline-tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-family: 'Caveat', cursive;
+    font-size: 0.9rem;
+    padding: 3px 12px;
+    background: var(--ink-faint);
+    color: var(--ink-dark);
+    border-radius: 2px;
+  }
+
+  /* ============ PROJECTS ============ */
+  #projects {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 120px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 32px;
+    margin-top: 16px;
+  }
+
+  .project-card {
+    background: var(--paper-warm);
+    border: 2px solid var(--ink);
+    padding: 28px;
+    position: relative;
+    box-shadow: 5px 5px 0 var(--ink-faint);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .project-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .project-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+
+  .project-number {
+    position: absolute;
+    top: -14px;
+    left: 20px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    padding: 2px 10px;
+  }
+
+  .project-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink-dark);
+    margin-bottom: 10px;
+    margin-top: 8px;
+  }
+
+  .project-desc {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .project-link {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--ink);
+    transition: color 0.2s;
+  }
+
+  .project-link:hover { color: var(--red-pen); border-color: var(--red-pen); }
+
+  /* ============ RESUME ============ */
+  #resume {
+    max-width: 900px;
+    margin: 0 auto;
+    padding-top: 120px;
+    text-align: center;
+  }
+
+  .resume-paper {
+    background: white;
+    border: 2px solid var(--ink);
+    padding: 60px;
+    margin: 40px 0;
+    position: relative;
+    box-shadow: 10px 10px 0 var(--ink-faint);
+    transform: rotate(-0.3deg);
+    text-align: left;
+  }
+
+  .resume-paper::before {
+    content: '';
+    position: absolute;
+    left: 80px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 100, 100, 0.3);
+  }
+
+  .resume-section-head {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink-dark);
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 6px;
+    margin: 28px 0 16px;
+  }
+
+  .resume-item {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--ink);
+    padding-left: 16px;
+  }
+
+  .resume-item + .resume-item { margin-top: 12px; }
+
+  .download-btn {
+    display: inline-block;
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink-dark);
+    background: var(--highlight);
+    padding: 14px 40px;
+    border: 2px solid var(--ink);
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.2s, box-shadow 0.2s;
+    transform: rotate(0.5deg);
+  }
+
+  .download-btn:hover {
+    transform: rotate(0.5deg) translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  /* ============ CONTACT ============ */
+  #contact {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 120px;
+    text-align: center;
+  }
+
+  .envelope {
+    display: inline-block;
+    margin: 40px 0;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .envelope:hover { transform: scale(1.05) rotate(-2deg); }
+
+  .contact-note {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.5rem;
+    color: var(--ink);
+    line-height: 1.8;
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+
+  .mail-link {
+    display: inline-block;
+    font-family: 'Caveat', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--ink-dark);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 6px;
+  }
+
+  .mail-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--red-pen);
+    transform: rotate(-0.5deg);
+  }
+
+  .mail-link:hover { color: var(--red-pen); }
+
+  .doodles-contact {
+    margin-top: 60px;
+    opacity: 0.25;
+  }
+
+  /* ============ INTERACTIVE CURSOR TRAIL ============ */
+  .cursor-dot {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: var(--ink);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.5s;
+  }
+
+  /* ============ DRAWING CANVAS HOME ============ */
+  #doodle-board {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: all;
+  }
+
+  .home-content {
+    position: relative;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .home-content a, .home-content button {
+    pointer-events: all;
+  }
+
+  .draw-hint {
+    position: absolute;
+    bottom: 80px;
+    right: 60px;
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--ink-light);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+  }
+
+  .clear-btn {
+    position: absolute;
+    bottom: 80px;
+    right: 60px;
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1rem, 2vw, 2rem);
+    color: var(--ink-light);
+    background: none;
+    border: 1px solid var(--ink-light);
+    padding: 6px 14px;
+    cursor: pointer;
+    z-index: 4;
+    display: none;
+    transition: background 0.2s;
+  }
+
+  .clear-btn:hover { background: var(--paper-warm); }
+
+  /* ============ PAPER CORNER FOLD ============ */
+  .corner-fold {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 40px 40px;
+    border-color: transparent transparent var(--paper-line) transparent;
+    filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.1));
+  }
+
+  /* ============ SECTION DIVIDER ============ */
+  .divider {
+    width: 100%;
+    height: 60px;
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  /* ============ FADE IN ============ */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger */
+  .stagger-1 { transition-delay: 0.1s; }
+  .stagger-2 { transition-delay: 0.2s; }
+  .stagger-3 { transition-delay: 0.3s; }
+  .stagger-4 { transition-delay: 0.4s; }
+
+  /* ============ MARGIN DOODLES ============ */
+  .margin-doodle {
+    position: absolute;
+    left: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.2;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { gap: 16px; }
+    section { padding: 80px 24px 40px; }
+    #about { grid-template-columns: 1fr; gap: 40px; }
+    .photo-frame { order: -1; }
+  }
+</style>
+</head>
+<body>
+
+
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">Vani</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experiences">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#resume">Resumé</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ===== HOME ===== -->
+<section id="home">
+  <canvas id="doodle-board"></canvas>
+
+  <div class="home-content">
+    <div class="home-paper">
+
+      <h1 class="name-heading">
+        I'm <span class="underline-drawn">Vani Sahjwani
+          <svg height="12" viewBox="0 0 200 12" preserveAspectRatio="none">
+            <path d="M 0 8 Q 50 2, 100 6 Q 150 10, 200 5" stroke="#1a3a6b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </h1>
+
+      <p class="tagline">
+        A ___ who loves turning complex problems into clean, thoughtful solutions — and maybe doodling in the margins.
+      </p>
+
+      <a href="#contact" class="cta-btn">Say hello →</a>
+    </div>
+
+    <!-- Background paper doodle SVG -->
+    <svg class="doodle-canvas" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+   
+    </svg>
+  </div>
+
+  <div class="draw-hint" id="drawHint">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#1a3a6b"/>
+    </svg>
+    doodle on this page!
+  </div>
+  <button class="clear-btn" id="clearBtn" onclick="clearCanvas()">✕ clear doodles</button>
+
+  <div class="scroll-arrow">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5v14M5 12l7 7 7-7" stroke="#4a6fa5" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    scroll
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="photo-frame fade-in">
+    <div class="photo-placeholder">
+      <div class="tape tape-top"></div>
+      <div class="tape tape-left"></div>
+      <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#1a3a6b" stroke-width="1.5"/>
+        <circle cx="12" cy="7" r="4" stroke="#1a3a6b" stroke-width="1.5"/>
+      </svg>
+      <span style="font-family:'Caveat',cursive;color:var(--ink-light);font-size:0.9rem;">your photo here</span>
+      <div class="photo-caption">a human being ✓</div>
+    </div>
+    <div class="corner-fold"></div>
+  </div>
+
+  <div class="fade-in stagger-1">
+    <h2 class="section-title">Nice to meet you.</h2>
+    <div class="about-text">
+      <p>Hi! I'm <strong>Your Name</strong>, a [Your Role] based in [City]. I studied [Your Degree] at [Your University] and have spent the last [X] years [doing amazing things].</p>
+      <p>I care deeply about [your values / what drives you]. When I'm not working, you'll find me [your hobbies or interests]. I believe the best work happens when curiosity meets craft.</p>
+      <p>I'm currently open to [full-time / internship / freelance] opportunities in [your field].</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXPERIENCES ===== -->
+<section id="experiences">
+  <div class="fade-in">
+    <h2 class="section-title">Experience</h2>
+  </div>
+
+  <div class="tab-switcher fade-in stagger-1">
+    <button class="tab-btn active" onclick="switchTab('exp', 'professional', this)">Professional</button>
+    <button class="tab-btn" onclick="switchTab('exp', 'nonprofessional', this)">Beyond Work</button>
+  </div>
+
+  <!-- Professional Experiences -->
+  <div id="exp-professional" class="tab-content active">
+    <div class="timeline">
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jan 2024 – Present</div>
+        <div class="timeline-role">Job Title</div>
+        <div class="timeline-company">Company Name · Location</div>
+        <div class="timeline-desc">Describe what you did here. Focus on impact, not just tasks. What changed because you were there?</div>
+        <div class="timeline-tags">
+          <span class="tag">Skill A</span><span class="tag">Skill B</span><span class="tag">Skill C</span>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-in stagger-1">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jun 2022 – Dec 2023</div>
+        <div class="timeline-role">Previous Role</div>
+        <div class="timeline-company">Previous Company · Location</div>
+        <div class="timeline-desc">Another accomplishment-focused description. Numbers and results stand out. "Grew X by 40%" beats "responsible for X."</div>
+        <div class="timeline-tags">
+          <span class="tag">Tool X</span><span class="tag">Domain Y</span>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-in stagger-2">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Summer 2021</div>
+        <div class="timeline-role">Internship Title</div>
+        <div class="timeline-company">Internship Company · Location</div>
+        <div class="timeline-desc">Your first big break — what did you learn? What did you ship or contribute?</div>
+        <div class="timeline-tags">
+          <span class="tag">Learning A</span><span class="tag">Learning B</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Non-Professional Experiences -->
+  <div id="exp-nonprofessional" class="tab-content">
+    <div class="timeline">
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2022 – Present</div>
+        <div class="timeline-role">Club / Volunteer Role</div>
+        <div class="timeline-company">Organization Name</div>
+        <div class="timeline-desc">Leadership, community, sport, art — anything that makes you whole. These often say more about you than a job title.</div>
+        <div class="timeline-tags"><span class="tag">Leadership</span><span class="tag">Community</span></div>
+      </div>
+
+      <div class="timeline-item fade-in stagger-1">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2020 – 2022</div>
+        <div class="timeline-role">Passion Project / Side Hustle</div>
+        <div class="timeline-company">Self-initiated</div>
+        <div class="timeline-desc">That thing you built, ran, or created outside of class or work. Passion projects show initiative and genuine interest.</div>
+        <div class="timeline-tags"><span class="tag">Creative</span><span class="tag">Initiative</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section id="projects">
+  <div class="fade-in">
+    <h2 class="section-title">Projects</h2>
+  </div>
+
+  <div class="tab-switcher fade-in stagger-1">
+    <button class="tab-btn active" onclick="switchTab('proj', 'professional', this)">Professional</button>
+    <button class="tab-btn" onclick="switchTab('proj', 'nonprofessional', this)">Personal</button>
+  </div>
+
+  <!-- Professional Projects -->
+  <div id="proj-professional" class="tab-content active">
+    <div class="projects-grid">
+
+      <div class="project-card fade-in">
+        <div class="project-number">01</div>
+        <div class="project-title">Project Alpha</div>
+        <div class="project-desc">A short, punchy description of what this project does and why it matters. What problem did you solve? Who did it help?</div>
+        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Tech A</span><span class="tag">Tech B</span></div>
+        <a href="#" class="project-link">View project →</a>
+        <div class="corner-fold"></div>
+      </div>
+
+      <div class="project-card fade-in stagger-1">
+        <div class="project-number">02</div>
+        <div class="project-title">Project Beta</div>
+        <div class="project-desc">Describe the scope, your role, and the outcome. Even better if you can link to it or show a screenshot somewhere.</div>
+        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Tech C</span><span class="tag">Tech D</span></div>
+        <a href="#" class="project-link">View project →</a>
+        <div class="corner-fold"></div>
+      </div>
+
+      <div class="project-card fade-in stagger-2">
+        <div class="project-number">03</div>
+        <div class="project-title">Project Gamma</div>
+        <div class="project-desc">Keep it concise but specific. Vague descriptions ("a web app") are less compelling than specific ones ("a tool that automates X for Y").</div>
+        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Tech E</span></div>
+        <a href="#" class="project-link">View project →</a>
+        <div class="corner-fold"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Personal Projects -->
+  <div id="proj-nonprofessional" class="tab-content">
+    <div class="projects-grid">
+
+      <div class="project-card fade-in" style="border-color: var(--green-ink);">
+        <div class="project-number" style="background:var(--green-ink);">P1</div>
+        <div class="project-title">Personal Project 1</div>
+        <div class="project-desc">A side project born out of curiosity or fun. Maybe it's a creative experiment, a tool you built for yourself, or something you gave to friends.</div>
+        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">For fun</span></div>
+        <a href="#" class="project-link">See it →</a>
+        <div class="corner-fold"></div>
+      </div>
+
+      <div class="project-card fade-in stagger-1" style="border-color: var(--red-pen);">
+        <div class="project-number" style="background:var(--red-pen);">P2</div>
+        <div class="project-title">Personal Project 2</div>
+        <div class="project-desc">Creative work, art, writing, music — anything that shows another side of you. Recruiters love seeing dimension.</div>
+        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Creative</span></div>
+        <a href="#" class="project-link">Explore →</a>
+        <div class="corner-fold"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== RESUME ===== -->
+<section id="resume">
+  <div class="fade-in">
+    <h2 class="section-title">Resumé</h2>
+  </div>
+
+  <div class="resume-paper fade-in stagger-1">
+    <div style="font-family:'Caveat',cursive;font-size:2rem;font-weight:700;color:var(--ink-dark);">Your Full Name</div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:1rem;color:var(--ink-light);margin-top:4px;">your.email@example.com · (123) 456-7890 · linkedin.com/in/yourhandle · yoursite.com</div>
+
+    <div class="resume-section-head">Education</div>
+    <div class="resume-item">
+      <strong>Bachelor's / Master's in Your Degree</strong> — Your University, City · 20XX–20XX<br>
+      Relevant coursework: Course A, Course B, Course C · GPA: X.XX
+    </div>
+
+    <div class="resume-section-head">Experience</div>
+    <div class="resume-item">
+      <strong>Job Title</strong> · Company Name · Jan 2024–Present<br>
+      • Accomplished X by doing Y, resulting in Z.<br>
+      • Led a team of N people to deliver a project on time and under budget.
+    </div>
+    <div class="resume-item">
+      <strong>Previous Role</strong> · Previous Company · Jun 2022–Dec 2023<br>
+      • Key achievement with measurable impact.<br>
+      • Another strong bullet point.
+    </div>
+
+    <div class="resume-section-head">Skills</div>
+    <div class="resume-item">
+      <strong>Technical:</strong> Skill A, Skill B, Skill C, Tool D<br>
+      <strong>Languages:</strong> English (native), Other (proficient)
+    </div>
+
+    <div class="resume-section-head">Awards & Activities</div>
+    <div class="resume-item">
+      Award / Scholarship / Honour · Year<br>
+      Club or Activity · Role · Years Active
+    </div>
+  </div>
+
+  <a href="https://drive.google.com/file/d/1c862J2Sz76lh6q_6Xry8heVW5DeyPwKZ/view?usp=sharing" download class="download-btn fade-in stagger-2">
+    ↓ Download my résumé
+  </a>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="fade-in">
+    <h2 class="section-title">Get in touch.</h2>
+  </div>
+
+  <p class="contact-note fade-in stagger-1">
+    I'm always happy to chat - whether it's about an opportunity, a project, or just grabbing a coffee.
+  </p>
+
+  <a class="envelope fade-in stagger-2" href="mailto:vanisahjwani@gmail.com" title="Send me an email">
+    <svg width="120" height="90" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Envelope body -->
+      <rect x="4" y="4" width="112" height="82" rx="2" stroke="#1a3a6b" stroke-width="2.5" fill="#fafaf7"/>
+      <!-- Envelope flap -->
+      <path d="M4 4 L60 52 L116 4" stroke="#1a3a6b" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+      <!-- Bottom lines -->
+      <path d="M4 86 L44 50" stroke="#1a3a6b" stroke-width="2" stroke-linecap="round"/>
+      <path d="M116 86 L76 50" stroke="#1a3a6b" stroke-width="2" stroke-linecap="round"/>
+      <!-- Stamp doodle -->
+      <rect x="88" y="10" width="22" height="18" rx="1" stroke="#c0392b" stroke-width="1.5" fill="none"/>
+      <path d="M91 14 h4 M91 17 h8 M91 20 h6" stroke="#c0392b" stroke-width="1" stroke-linecap="round"/>
+      <!-- Address lines -->
+      <line x1="16" y1="62" x2="50" y2="62" stroke="#b8cce4" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="16" y1="68" x2="44" y2="68" stroke="#b8cce4" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="16" y1="74" x2="48" y2="74" stroke="#b8cce4" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </a>
+
+  <div class="fade-in stagger-3">
+    <a href="mailto:vanisahjwani@gmail.com" class="mail-link">vanisahjwani@gmail.com</a>
+  </div>
+
+  <svg class="doodles-contact fade-in stagger-4" width="300" height="60" viewBox="0 0 300 60" fill="none">
+    <path d="M20 30 Q40 10 60 30 Q80 50 100 30 Q120 10 140 30 Q160 50 180 30 Q200 10 220 30 Q240 50 260 30 Q280 10 300 30" stroke="#1a3a6b" stroke-width="1.5" fill="none"/>
+  </svg>
+</section>
+
+<script>
+// ===== DOODLE CANVAS =====
+const canvas = document.getElementById('doodle-board');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let hasDoodled = false;
+
+function resizeCanvas() {
+  const homeSection = document.getElementById('home');
+  canvas.width = homeSection.offsetWidth;
+  canvas.height = homeSection.offsetHeight;
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+canvas.addEventListener('mousedown', e => {
+  if (e.target !== canvas) return;
+  drawing = true;
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+  if (!hasDoodled) {
+    hasDoodled = true;
+    document.getElementById('drawHint').style.display = 'none';
+    document.getElementById('clearBtn').style.display = 'block';
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (!drawing) return;
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.strokeStyle = '#1a3a6b';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = 0.7;
+  ctx.stroke();
+});
+
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mouseleave', () => drawing = false);
+
+// Touch support
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  drawing = true;
+  ctx.beginPath();
+  ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+  if (!hasDoodled) {
+    hasDoodled = true;
+    document.getElementById('drawHint').style.display = 'none';
+    document.getElementById('clearBtn').style.display = 'block';
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (!drawing) return;
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+  ctx.strokeStyle = '#1a3a6b';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = 0.7;
+  ctx.stroke();
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => drawing = false);
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  hasDoodled = false;
+  document.getElementById('drawHint').style.display = 'flex';
+  document.getElementById('clearBtn').style.display = 'none';
+}
+
+// ===== TAB SWITCHER =====
+function switchTab(prefix, tab, btn) {
+  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(el => el.classList.remove('active'));
+  document.getElementById(`${prefix}-${tab}`).classList.add('active');
+  btn.closest('.tab-switcher').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Trigger visibility for newly shown items
+  triggerVisibility();
+}
+
+// ===== SCROLL ANIMATIONS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+function triggerVisibility() {
+  document.querySelectorAll('.fade-in, .timeline-item, .project-card').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+triggerVisibility();
+
+// ===== CURSOR TRAIL =====
+const trailContainer = document.getElementById('cursor-trail');
+const dots = [];
+const NUM_DOTS = 8;
+
+for (let i = 0; i < NUM_DOTS; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'cursor-dot';
+  dot.style.opacity = (1 - i / NUM_DOTS) * 0.6;
+  dot.style.transform = `scale(${1 - i * 0.08})`;
+  trailContainer.appendChild(dot);
+  dots.push({ el: dot, x: 0, y: 0 });
+}
+
+let mouseX = 0, mouseY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateTrail() {
+  let x = mouseX, y = mouseY;
+  dots.forEach((dot, i) => {
+    dot.x += (x - dot.x) * (0.4 - i * 0.03);
+    dot.y += (y - dot.y) * (0.4 - i * 0.03);
+    dot.el.style.left = `${dot.x - 3}px`;
+    dot.el.style.top = `${dot.y - 3}px`;
+    x = dot.x;
+    y = dot.y;
+  });
+  requestAnimationFrame(animateTrail);
+}
+
+animateTrail();
+
+// ===== HOME ENTRANCE ANIMATION =====
+window.addEventListener('load', () => {
+  const nameHeading = document.querySelector('.name-heading');
+  const tagline = document.querySelector('.tagline');
+  const ctaBtn = document.querySelector('.cta-btn');
+  const stickyNotes = document.querySelectorAll('.sticky-note');
+  const sectionLabel = document.querySelector('#home .section-label');
+
+  [sectionLabel, nameHeading, tagline, ctaBtn].forEach((el, i) => {
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`;
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  });
+
+  stickyNotes.forEach((note, i) => {
+    note.style.opacity = '0';
+    note.style.transition = `opacity 0.5s ease ${0.8 + i * 0.2}s`;
+    requestAnimationFrame(() => { note.style.opacity = '1'; });
+  });
+});
+</script>
+</body>
+</html>
