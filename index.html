@@ -1,1301 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vani Sahjwani</title>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Architects+Daughter&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="assets/favicon.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" type="image/png" href="assets/fav1.png" />
+<title>Vani's Archive</title>
 <style>
-  :root {
-    --ink: #1a3a6b;
-    --ink-dark: #0d2347;
-    --ink-light: #4a6fa5;
-    --ink-faint: #b8cce4;
-    --paper: #fafaf7;
-    --paper-warm: #f5f4ef;
-    --paper-line: #dde8f4;
-    --red-pen: #c0392b;
-    --pencil-mark: #8fa8c8;
-    --highlight: #fff9c4;
-    --highlight-pink: #ffe0e0;
-    --green-ink: #2d6a4f;
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+  /* ============================================================
+     Vani's Archive — portfolio landing
+     - Home page (paper + polaroid + title)
+     - Scroll down: stop-motion "tear away" transition (frames 6–27)
+       revealing the corkboard nav page underneath.
+     - Nav page: clickable pinned elements -> each section.
+     Everything sits on a fixed 1366x768 "board" that scales to any
+     screen/ratio, centered, with the corkboard filling the backdrop.
+     ============================================================ */
+
+  :root{
+    --board-w: 1366;
+    --board-h: 768;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: auto; background:#e9e6df; }
   body {
-    font-family: 'Kalam', cursive;
-    background: var(--paper);
-    color: var(--ink);
     overflow-x: hidden;
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z' fill='%231a3a6b'/%3E%3C/svg%3E") 0 24, auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* ============ PAPER TEXTURE ============ */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: 
-      repeating-linear-gradient(
-        transparent,
-        transparent 31px,
-        var(--paper-line) 31px,
-        var(--paper-line) 32px
-      );
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-  }
+  /* The scroll driver: its extra height gives us scroll travel to
+     scrub the transition. The stage stays pinned inside it. */
+  .scroll-wrap { position: relative; height: 320vh; }
 
-  /* ============ NAV ============ */
-  nav {
-    position: fixed;
+  .stage {
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    padding: 16px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(250,250,247,0.92);
-    backdrop-filter: blur(4px);
-    border-bottom: 2px solid var(--ink);
-  }
-
-  .nav-logo {
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1.7rem, 3.5vw, 3rem);
-    font-weight: 700;
-    color: var(--ink-dark);
-    text-decoration: none;
-    position: relative;
-  }
-
-  .nav-logo::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--ink);
-    transform: rotate(-1deg);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1.2rem, 2vw, 2rem);
-    color: var(--ink);
-    text-decoration: none;
-    position: relative;
-    transition: color 0.2s;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--ink);
-    transition: width 0.3s cubic-bezier(.25,.46,.45,.94);
-  }
-
-  .nav-links a:hover::after { width: 100%; }
-  .nav-links a:hover { color: var(--ink-dark); }
-
-  /* ============ SECTIONS ============ */
-  section {
-    min-height: 100vh;
-    padding: 100px 60px 60px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ============ HOME ============ */
-  #home {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding-left: 10%;
+    height: 100vh;
+    height: 100svh;
     overflow: hidden;
   }
 
-  .home-paper {
-    position: relative;
-    max-width: 700px;
+  .layer { position: absolute; inset: 0; }
+
+  /* Corkboard fills the whole viewport so nothing letterboxes ugly. */
+  .corkboard {
+    background: url("assets/5.png") center center / cover no-repeat;
+    z-index: 0;
   }
 
-  .sticky-note {
+  /* A board that keeps the original 1366x768 proportions and scales
+     to fit any viewport. All aligned artwork lives inside a `.fit`. */
+  .fit {
     position: absolute;
-    background: var(--highlight);
-    padding: 12px 16px;
-    font-family: 'Caveat', cursive;
-    font-size: 1rem;
-    box-shadow: 3px 3px 8px rgba(0,0,0,0.15);
-    transform: rotate(3deg);
-    z-index: 5;
-  }
-
-  .sticky-note-pink {
-    background: var(--highlight-pink);
-    transform: rotate(-2deg);
-  }
-
-  .name-heading {
-    font-family: 'Caveat', cursive;
-    font-size: clamp(3.5rem, 10vw, 8rem);
-    font-weight: 950;
-    color: var(--ink-dark);
-    line-height: 1.1;
-    position: relative;
-    margin-top: 40px;
-  }
-
-  .name-heading .underline-drawn {
-    position: relative;
-    display: inline-block;
-  }
-
-  .name-heading .underline-drawn svg {
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 100%;
-    overflow: visible;
-  }
-
-  .tagline {
-    font-family: 'Patrick Hand', cursive;
-    font-size: clamp(1rem, 2.5vw, 1.4rem);
-    color: var(--ink-light);
-    margin-top: 20px;
-    max-width: 500px;
-    line-height: 1.7;
-  }
-
-  .cta-btn {
-    margin-top: 36px;
-    display: inline-block;
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1rem, 2vw, 2rem);
-    font-weight: 700;
-    color: var(--paper);
-    background: var(--ink);
-    padding: 12px 24px;
-    border: 2px solid var(--ink-dark);
-    text-decoration: none;
-    position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 4px 4px 0 var(--ink-dark);
-    transform: rotate(-0.5deg);
-  }
-
-  .cta-btn:hover {
-    transform: rotate(-0.5deg) translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--ink-dark);
-  }
-
-  /* Interactive paper doodles */
-  .doodle-canvas {
-    position: absolute;
-    right: -80px;
-    top: -60px;
-    width: 420px;
-    height: 420px;
-    pointer-events: none;
-    opacity: 0.35;
-  }
-
-  /* ============ SCROLL INDICATOR ============ */
-  .scroll-arrow {
-    position: absolute;
-    bottom: 36px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--ink-light);
-    text-align: center;
+    transform: translate(-50%, -50%);
+    width: min(100vw, calc(100svh * var(--board-w) / var(--board-h)));
+    height: min(100svh, calc(100vw * var(--board-h) / var(--board-w)));
   }
-
-  @keyframes bounceDown {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(8px); }
-  }
-
-  /* ============ ABOUT ============ */
-  #about {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 120px;
-  }
-
-  .section-label {
-    font-family: 'Architects Daughter', cursive;
-    font-size: 0.85rem;
-    color: var(--red-pen);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .section-label::before {
-    content: '→';
-    font-size: 1rem;
-  }
-
-  .section-title {
-    font-family: 'Caveat', cursive;
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    font-weight: 700;
-    color: var(--ink-dark);
-    line-height: 1.1;
-    margin-bottom: 24px;
-  }
-
-  .about-text {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 1.1rem;
-    line-height: 1.9;
-    color: var(--ink);
-  }
-
-  .about-text p + p { margin-top: 16px; }
-
-  .photo-frame {
-    position: relative;
-    display: flex;
-    justify-content: center;
-  }
-
-  .photo-placeholder {
-    width: 280px;
-    height: 320px;
-    background: var(--paper-warm);
-    border: 2px solid var(--ink);
-    position: relative;
-    box-shadow: 8px 8px 0 var(--ink-faint);
-    transform: rotate(1.5deg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .photo-placeholder svg {
-    opacity: 0.3;
-  }
-
-  .photo-caption {
-    font-family: 'Caveat', cursive;
-    font-size: 1.2rem;
-    color: var(--ink-light);
-    position: absolute;
-    bottom: -28px;
-    left: 0;
-    right: 0;
-    text-align: center;
-  }
-
-  .tape {
-    position: absolute;
-    background: rgba(180,200,230,0.4);
-    border: 1px solid rgba(180,200,230,0.5);
-    width: 60px;
-    height: 20px;
-  }
-
-  .tape-top { top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg); }
-  .tape-left { left: -10px; top: 40%; transform: rotate(90deg) translateX(-50%); }
-
-  /* ============ SKILLS PILLS ============ */
-  .skills-wrap {
-    margin-top: 28px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .skill-pill {
-    font-family: 'Caveat', cursive;
-    font-size: 1rem;
-    padding: 6px 16px;
-    border: 2px solid var(--ink);
-    background: transparent;
-    position: relative;
-    transition: background 0.2s;
-  }
-
-  .skill-pill:hover { background: var(--highlight); }
-
-  /* ============ EXPERIENCES ============ */
-  #experiences {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding-top: 120px;
-  }
-
-  .tab-switcher {
-    display: flex;
-    gap: 4px;
-    margin: 32px 0 48px;
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 0;
-  }
-
-  .tab-btn {
-    font-family: 'Caveat', cursive;
-    font-size: 1.2rem;
-    padding: 10px 28px;
-    border: 2px solid var(--ink);
-    border-bottom: none;
-    background: var(--paper-warm);
-    color: var(--ink-light);
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    bottom: -2px;
-  }
-
-  .tab-btn.active {
-    background: var(--paper);
-    color: var(--ink-dark);
-    font-weight: 700;
-    border-bottom: 2px solid var(--paper);
-  }
-
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  /* Timeline */
-  .timeline {
-    position: relative;
-    padding-left: 40px;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 8px;
-    top: 8px;
-    bottom: 0;
-    width: 2px;
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--ink) 0,
-      var(--ink) 6px,
-      transparent 6px,
-      transparent 12px
-    );
-  }
-
-  .timeline-item {
-    position: relative;
-    margin-bottom: 48px;
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-
-  .timeline-item.visible {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .timeline-dot {
-    position: absolute;
-    left: -36px;
-    top: 6px;
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--ink);
-    background: var(--paper);
-    border-radius: 50%;
-  }
-
-  .timeline-dot::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    background: var(--ink);
-    border-radius: 50%;
-  }
-
-  .timeline-date {
-    font-family: 'Architects Daughter', cursive;
-    font-size: 0.85rem;
-    color: var(--red-pen);
-    margin-bottom: 6px;
-  }
-
-  .timeline-role {
-    font-family: 'Caveat', cursive;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--ink-dark);
-  }
-
-  .timeline-company {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 1rem;
-    color: var(--ink-light);
-    margin-bottom: 10px;
-  }
-
-  .timeline-desc {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 1rem;
-    line-height: 1.8;
-    color: var(--ink);
-    max-width: 700px;
-  }
-
-  .timeline-tags {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .tag {
-    font-family: 'Caveat', cursive;
-    font-size: 0.9rem;
-    padding: 3px 12px;
-    background: var(--ink-faint);
-    color: var(--ink-dark);
-    border-radius: 2px;
-  }
-
-  /* ============ PROJECTS ============ */
-  #projects {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 120px;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 32px;
-    margin-top: 16px;
-  }
-
-  .project-card {
-    background: var(--paper-warm);
-    border: 2px solid var(--ink);
-    padding: 28px;
-    position: relative;
-    box-shadow: 5px 5px 0 var(--ink-faint);
-    transition: transform 0.2s, box-shadow 0.2s;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .project-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s, border-color 0.2s;
-  }
-
-  .project-card:hover {
-    transform: translate(-3px, -3px);
-    box-shadow: 8px 8px 0 var(--ink);
-  }
-
-  .project-number {
-    position: absolute;
-    top: -14px;
-    left: 20px;
-    background: var(--ink);
-    color: var(--paper);
-    font-family: 'Caveat', cursive;
-    font-size: 1rem;
-    padding: 2px 10px;
-  }
-
-  .project-title {
-    font-family: 'Caveat', cursive;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--ink-dark);
-    margin-bottom: 10px;
-    margin-top: 8px;
-  }
-
-  .project-desc {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--ink);
-  }
-
-  .project-link {
-    display: inline-block;
-    margin-top: 16px;
-    font-family: 'Caveat', cursive;
-    font-size: 1rem;
-    color: var(--ink);
-    text-decoration: none;
-    border-bottom: 2px solid var(--ink);
-    transition: color 0.2s;
-  }
-
-  .project-link:hover { color: var(--red-pen); border-color: var(--red-pen); }
-
-  /* ============ RESUME ============ */
-  #resume {
-    max-width: 900px;
-    margin: 0 auto;
-    padding-top: 120px;
-    text-align: center;
-  }
-
-  .resume-paper {
-    background: white;
-    border: 2px solid var(--ink);
-    padding: 60px;
-    margin: 40px 0;
-    position: relative;
-    box-shadow: 10px 10px 0 var(--ink-faint);
-    transform: rotate(-0.3deg);
-    text-align: left;
-  }
-
-  .resume-paper::before {
-    content: '';
-    position: absolute;
-    left: 80px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: rgba(255, 100, 100, 0.3);
-  }
-
-  .resume-section-head {
-    font-family: 'Caveat', cursive;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--ink-dark);
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 6px;
-    margin: 28px 0 16px;
-  }
-
-  .resume-item {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: var(--ink);
-    padding-left: 16px;
-  }
-
-  .resume-item + .resume-item { margin-top: 12px; }
-
-  .download-btn {
-    display: inline-block;
-    font-family: 'Caveat', cursive;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--ink-dark);
-    background: var(--highlight);
-    padding: 14px 40px;
-    border: 2px solid var(--ink);
-    text-decoration: none;
-    box-shadow: 4px 4px 0 var(--ink);
-    transition: transform 0.2s, box-shadow 0.2s;
-    transform: rotate(0.5deg);
-  }
-
-  .download-btn:hover {
-    transform: rotate(0.5deg) translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--ink);
-  }
-
-  /* ============ CONTACT ============ */
-  #contact {
-    max-width: 800px;
-    margin: 0 auto;
-    padding-top: 120px;
-    text-align: center;
-  }
-
-  .envelope {
-    display: inline-block;
-    margin: 40px 0;
-    cursor: pointer;
-    transition: transform 0.3s;
-  }
-
-  .envelope:hover { transform: scale(1.05) rotate(-2deg); }
-
-  .contact-note {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 1.5rem;
-    color: var(--ink);
-    line-height: 1.8;
-    max-width: 500px;
-    margin: 0 auto 32px;
-  }
-
-  .mail-link {
-    display: inline-block;
-    font-family: 'Caveat', cursive;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--ink-dark);
-    text-decoration: none;
-    position: relative;
-    padding-bottom: 6px;
-  }
-
-  .mail-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--red-pen);
-    transform: rotate(-0.5deg);
-  }
-
-  .mail-link:hover { color: var(--red-pen); }
-
-  .doodles-contact {
-    margin-top: 60px;
-    opacity: 0.25;
-  }
-
-  /* ============ INTERACTIVE CURSOR TRAIL ============ */
-  .cursor-dot {
-    position: fixed;
-    width: 6px;
-    height: 6px;
-    background: var(--ink);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transition: opacity 0.5s;
-  }
-
-  /* ============ DRAWING CANVAS HOME ============ */
-  #doodle-board {
+  .fit img {
     position: absolute;
     inset: 0;
-    z-index: 2;
-    pointer-events: all;
-  }
-
-  .home-content {
-    position: relative;
-    z-index: 3;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
     pointer-events: none;
   }
 
-  .home-content a, .home-content button {
-    pointer-events: all;
+  /* ---- transition frames (full-bleed: scaled up to cover the screen) ---- */
+  /* Purely decorative -- must never intercept clicks, even while fading. */
+  .frames { z-index: 1; pointer-events: none; }
+  .framewrap { position: absolute; inset: 0; pointer-events: none; }
+  .frames img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* fill the entire viewport, cropping as needed */
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .frames img.on { opacity: 1; }
+
+  /* ---- home page ---- (sits above frames, fades out as you scroll) */
+  .home { z-index: 3; }
+  .home .paper {
+    position: absolute; inset: 0;
+    background: url("assets/4.png") center center / cover no-repeat;
+  }
+  .scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(14px, 3vh, 34px);
+    transform: translateX(-50%);
+    font-size: clamp(11px, 1.4vw, 15px);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #2b2b2b;
+    opacity: .55;
+    animation: bob 1.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes bob {
+    0%,100% { transform: translate(-50%, 0); }
+    50%     { transform: translate(-50%, 6px); }
   }
 
-  .draw-hint {
-    position: absolute;
-    bottom: 80px;
-    right: 60px;
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--ink-light);
+  /* ---- nav page ---- (fades in at the end, becomes interactive) */
+  .nav {
     z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Nav elements: each is a whole, pre-cropped PNG placed freely, so the
+     layout can be rearranged per screen shape. `width` is a % of the board;
+     height follows the image. left/top mark the element's CENTER. */
+  .navboard {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    /* LANDSCAPE (wider-than-tall) board */
+    width:  min(100vw, calc(100svh * 16 / 9));
+    height: min(100svh, calc(100vw * 9 / 16));
+  }
+
+  .navel {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: block;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .navel img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    transition: transform .12s ease, filter .1s ease;
+  }
+  .navel:hover { z-index: 10; }
+  .navel:focus-visible { outline: none; }
+  /* crisp (0-blur) white outline hugs the artwork -> instant, no lag */
+  .navel:hover img, .navel:focus-visible img {
+    transform: scale(1.05);
+    filter:
+      drop-shadow( 2.5px  0     0 #fff) drop-shadow(-2.5px  0     0 #fff)
+      drop-shadow( 0      2.5px 0 #fff) drop-shadow( 0     -2.5px 0 #fff)
+      drop-shadow( 1.8px  1.8px 0 #fff) drop-shadow(-1.8px  1.8px 0 #fff)
+      drop-shadow( 1.8px -1.8px 0 #fff) drop-shadow(-1.8px -1.8px 0 #fff)
+      drop-shadow( 0 6px 9px rgba(0,0,0,.28));
+  }
+
+  /* ---------- LANDSCAPE positions (default: wider-than-tall) ----------
+     Widths are each element's real cropped pixel-width * one shared scale
+     factor (~0.068), so every element renders at the SAME relative scale
+     as the others (true to its original size) -- only nudged by up to
+     ~10% here and there to balance the (intentionally overlapping) layout. */
+  #n-projects    { left: 16.5%; top: 33%;   width: 27.7%; }
+  #n-about       { left: 50%;   top: 35%;   width: 40%; }
+  #n-offclock    { left: 45%;   top: 80%;   width: 49.2%; }
+  #n-experiences { left: 85%;   top: 59%;   width: 29.1%; }
+  #n-resume      { left: 8.5%;  top: 82%;   width: 14.3%; }
+  #n-linkedin    { left: 74%;   top: 8%;    width: 10.1%; }
+  #n-github      { left: 76%;   top: 22%;    width: 10.1%; }
+  #n-email       { left: 85%;   top: 9%;    width: 9.9%;  }
+  #n-home        { left: 94%;   top: 13%;    width: 10.1%; }
+
+  /* ---------- SQUARE / PORTRAIT: taller board + vertical spread ----------
+     Same shared-scale idea, rescaled ~1.25x (fewer columns, more room). */
+  @media (max-aspect-ratio: 1/1) {
+    .navboard {
+      width:  min(100vw, calc(100svh * 3 / 4));
+      height: min(100svh, calc(100vw * 4 / 3));
+    }
+    #n-linkedin    { left: 20%; top: 6%;    width: 15%;   }
+    #n-github      { left: 40%; top: 6%;    width: 15%;   }
+    #n-email       { left: 60%; top: 6%;    width: 14.7%; }
+    #n-home        { left: 80%; top: 6%;    width: 15%;   }
+    #n-projects    { left: 25%; top: 32%;   width: 48%;   }
+    #n-about       { left: 74%; top: 29%;   width: 46%;   }
+    #n-offclock    { left: 70%; top: 50%;   width: 64%;   }
+    #n-experiences { left: 47%; top: 76%;   width: 43%;   }
+    #n-resume      { left: 14%; top: 80%;   width: 28%;   }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-hint { animation: none; }
+  }
+
+  /* ---- contact popup (email post-it) ----
+     Tapping outside the note (the dim backdrop) closes it and drops you
+     right back on the nav page underneath -- nothing ever navigates away. */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: transparent;   /* invisible click-catcher -- nav page shows through as-is */
+    cursor: pointer;
+  }
+  .contact-note {
+    position: relative;
+    width: min(90vw, 420px);
+    transform: rotate(2.8deg);
+  }
+  .modal.open .contact-note { animation: pop .35s ease; }
+  .contact-note img {
+    width: 100%;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(12px) scale(.96) rotate(-2.8deg); }
+    to   { opacity: 1; transform: translateY(0)    scale(1)   rotate(-2.8deg); }
+  }
+  .contact-note .note {
+    position: absolute;
+    inset: 0;
+    padding: 15% 11%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    opacity: 0.7;
+    justify-content: flex-start;
   }
-
-  .clear-btn {
-    position: absolute;
-    bottom: 80px;
-    right: 60px;
-    font-family: 'Caveat', cursive;
-    font-size: clamp(1rem, 2vw, 2rem);
-    color: var(--ink-light);
-    background: none;
-    border: 1px solid var(--ink-light);
-    padding: 6px 14px;
-    cursor: pointer;
-    z-index: 4;
-    display: none;
-    transition: background 0.2s;
+  .contact-note .line {
+    color: #575757;
+    text-shadow: .25px .25px 0 rgba(0, 0, 0, .15);
+    letter-spacing: .02em;
+    line-height: 1.05;
   }
-
-  .clear-btn:hover { background: var(--paper-warm); }
-
-  /* ============ PAPER CORNER FOLD ============ */
-  .corner-fold {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 0 40px 40px;
-    border-color: transparent transparent var(--paper-line) transparent;
-    filter: drop-shadow(-2px -2px 3px rgba(0,0,0,0.1));
+  .contact-note .title {
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.8rem, 6.5vw, 3.2rem);
+    margin-bottom: clamp(14px, 4vw, 32px);
+    transform: rotate(-1deg);
   }
-
-  /* ============ SECTION DIVIDER ============ */
-  .divider {
-    width: 100%;
-    height: 60px;
-    position: relative;
-    overflow: visible;
-    z-index: 1;
+  .contact-note .row {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1.1rem, 3.8vw, 2.2rem);
+    margin-bottom: clamp(10px, 3vw, 24px);
+    transform: rotate(.8deg);
   }
-
-  /* ============ FADE IN ============ */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  .contact-note .note a {
+    color: inherit;
+    text-decoration: none;
+    width: max-content;
+    transition: .15s ease;
   }
-
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Stagger */
-  .stagger-1 { transition-delay: 0.1s; }
-  .stagger-2 { transition-delay: 0.2s; }
-  .stagger-3 { transition-delay: 0.3s; }
-  .stagger-4 { transition-delay: 0.4s; }
-
-  /* ============ MARGIN DOODLES ============ */
-  .margin-doodle {
-    position: absolute;
-    left: -40px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.2;
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 14px 20px; }
-    .nav-links { gap: 16px; }
-    section { padding: 80px 24px 40px; }
-    #about { grid-template-columns: 1fr; gap: 40px; }
-    .photo-frame { order: -1; }
-  }
+  .contact-note .note a:hover  { opacity: .65; transform: translateX(2px); }
+  .contact-note .note a:active { transform: translateX(3px); }
 </style>
 </head>
 <body>
 
+  <div class="scroll-wrap" id="scrollWrap">
+    <div class="stage">
 
+      <!-- backdrop -->
+      <div class="layer corkboard"></div>
 
-<!-- NAV -->
-<nav>
-  <a href="#home" class="nav-logo">Vani</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experiences">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#resume">Resumé</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
+      <!-- stop-motion transition frames (6..27) injected by JS -->
+      <div class="layer frames"><div class="framewrap" id="frames"></div></div>
 
-<!-- ===== HOME ===== -->
-<section id="home">
-  <canvas id="doodle-board"></canvas>
-
-  <div class="home-content">
-    <div class="home-paper">
-
-      <h1 class="name-heading">
-        I'm <span class="underline-drawn">Vani Sahjwani
-          <svg height="12" viewBox="0 0 200 12" preserveAspectRatio="none">
-            <path d="M 0 8 Q 50 2, 100 6 Q 150 10, 200 5" stroke="#1a3a6b" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </svg>
-        </span>
-      </h1>
-
-      <p class="tagline">
-        A ___ who loves turning complex problems into clean, thoughtful solutions — and maybe doodling in the margins.
-      </p>
-
-      <a href="#contact" class="cta-btn">Say hello →</a>
-    </div>
-
-    <!-- Background paper doodle SVG -->
-    <svg class="doodle-canvas" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      
-   
-    </svg>
-  </div>
-
-  <div class="draw-hint" id="drawHint">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#1a3a6b"/>
-    </svg>
-    doodle on this page!
-  </div>
-  <button class="clear-btn" id="clearBtn" onclick="clearCanvas()">✕ clear doodles</button>
-
-  <div class="scroll-arrow">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M12 5v14M5 12l7 7 7-7" stroke="#4a6fa5" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-    scroll
-  </div>
-</section>
-
-<!-- ===== ABOUT ===== -->
-<section id="about">
-  <div class="photo-frame fade-in">
-    <div class="photo-placeholder">
-      <div class="tape tape-top"></div>
-      <div class="tape tape-left"></div>
-      <svg width="60" height="60" viewBox="0 0 24 24" fill="none">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#1a3a6b" stroke-width="1.5"/>
-        <circle cx="12" cy="7" r="4" stroke="#1a3a6b" stroke-width="1.5"/>
-      </svg>
-      <span style="font-family:'Caveat',cursive;color:var(--ink-light);font-size:0.9rem;">your photo here</span>
-      <div class="photo-caption">a human being ✓</div>
-    </div>
-    <div class="corner-fold"></div>
-  </div>
-
-  <div class="fade-in stagger-1">
-    <h2 class="section-title">Nice to meet you.</h2>
-    <div class="about-text">
-      <p>Hi! I'm <strong>Your Name</strong>, a [Your Role] based in [City]. I studied [Your Degree] at [Your University] and have spent the last [X] years [doing amazing things].</p>
-      <p>I care deeply about [your values / what drives you]. When I'm not working, you'll find me [your hobbies or interests]. I believe the best work happens when curiosity meets craft.</p>
-      <p>I'm currently open to [full-time / internship / freelance] opportunities in [your field].</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== EXPERIENCES ===== -->
-<section id="experiences">
-  <div class="fade-in">
-    <h2 class="section-title">Experience</h2>
-  </div>
-
-  <div class="tab-switcher fade-in stagger-1">
-    <button class="tab-btn active" onclick="switchTab('exp', 'professional', this)">Professional</button>
-    <button class="tab-btn" onclick="switchTab('exp', 'nonprofessional', this)">Beyond Work</button>
-  </div>
-
-  <!-- Professional Experiences -->
-  <div id="exp-professional" class="tab-content active">
-    <div class="timeline">
-
-      <div class="timeline-item fade-in">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jan 2024 – Present</div>
-        <div class="timeline-role">Job Title</div>
-        <div class="timeline-company">Company Name · Location</div>
-        <div class="timeline-desc">Describe what you did here. Focus on impact, not just tasks. What changed because you were there?</div>
-        <div class="timeline-tags">
-          <span class="tag">Skill A</span><span class="tag">Skill B</span><span class="tag">Skill C</span>
+      <!-- HOME -->
+      <div class="layer home" id="home">
+        <div class="paper"></div>
+        <div class="fit">
+          <img src="assets/3.png" alt="Polaroid of Vani" />
+          <img src="assets/2.png" alt="Vani's Archive — here's how i spend my time" />
         </div>
       </div>
 
-      <div class="timeline-item fade-in stagger-1">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jun 2022 – Dec 2023</div>
-        <div class="timeline-role">Previous Role</div>
-        <div class="timeline-company">Previous Company · Location</div>
-        <div class="timeline-desc">Another accomplishment-focused description. Numbers and results stand out. "Grew X by 40%" beats "responsible for X."</div>
-        <div class="timeline-tags">
-          <span class="tag">Tool X</span><span class="tag">Domain Y</span>
-        </div>
-      </div>
-
-      <div class="timeline-item fade-in stagger-2">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Summer 2021</div>
-        <div class="timeline-role">Internship Title</div>
-        <div class="timeline-company">Internship Company · Location</div>
-        <div class="timeline-desc">Your first big break — what did you learn? What did you ship or contribute?</div>
-        <div class="timeline-tags">
-          <span class="tag">Learning A</span><span class="tag">Learning B</span>
+      <!-- NAV -->
+      <div class="layer nav" id="nav">
+        <div class="navboard">
+          <!-- Each element is a whole (pre-cropped) PNG; placed via CSS (#n-*).
+               TODO: replace placeholder hrefs with your real section pages / links -->
+          <a class="navel" id="n-offclock" href="off-the-clock.html" aria-label="Off the clock"><img src="assets/31.png" alt="Off the clock" /></a>
+          <a class="navel" id="n-projects" href="projects.html" aria-label="Projects"><img src="assets/33.png" alt="Projects" /></a>
+          <a class="navel" id="n-about" href="about.html" aria-label="About me"><img src="assets/29.png" alt="About me" /></a>
+          <a class="navel" id="n-experiences" href="experiences.html" aria-label="Experiences"><img src="assets/30.png" alt="Experiences" /></a>
+          <a class="navel" id="n-resume" href="https://drive.google.com/file/d/1dZZIDktKosJerowUmCIa-zAu-b4q9KWc/view?usp=sharing" aria-label="Resume"><img src="assets/32.png" alt="Resume" /></a>
+          <a class="navel" id="n-linkedin" href="https://www.linkedin.com/in/vani-sahjwani/" aria-label="LinkedIn"><img src="assets/37.png" alt="LinkedIn" /></a>
+          <a class="navel" id="n-github" href="https://github.com/vsahjwani" aria-label="GitHub"><img src="assets/34.png" alt="GitHub" /></a>
+          <a class="navel" id="n-email" data-modal="contact" href="contact.html" aria-label="Email"><img src="assets/36.png" alt="Email" /></a>
+          <a class="navel" id="n-home" data-home="1" href="#" aria-label="Back to home"><img src="assets/35.png" alt="Home" /></a>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Non-Professional Experiences -->
-  <div id="exp-nonprofessional" class="tab-content">
-    <div class="timeline">
-
-      <div class="timeline-item fade-in">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">2022 – Present</div>
-        <div class="timeline-role">Club / Volunteer Role</div>
-        <div class="timeline-company">Organization Name</div>
-        <div class="timeline-desc">Leadership, community, sport, art — anything that makes you whole. These often say more about you than a job title.</div>
-        <div class="timeline-tags"><span class="tag">Leadership</span><span class="tag">Community</span></div>
+  <!-- CONTACT POPUP -->
+  <div class="modal" id="contactModal">
+    <div class="modal-backdrop" id="contactBackdrop"></div>
+    <div class="contact-note">
+      <img src="assets/39.png" alt="Sticky note" />
+      <div class="note">
+        <div class="line title">say hi!</div>
+        <a class="line row" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
+        <a class="line row" href="tel:6199539182">(619) 953-9182</a>
+        <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">linkedin.com</a>
       </div>
-
-      <div class="timeline-item fade-in stagger-1">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">2020 – 2022</div>
-        <div class="timeline-role">Passion Project / Side Hustle</div>
-        <div class="timeline-company">Self-initiated</div>
-        <div class="timeline-desc">That thing you built, ran, or created outside of class or work. Passion projects show initiative and genuine interest.</div>
-        <div class="timeline-tags"><span class="tag">Creative</span><span class="tag">Initiative</span></div>
-      </div>
-
     </div>
   </div>
-</section>
-
-<!-- ===== PROJECTS ===== -->
-<section id="projects">
-  <div class="fade-in">
-    <h2 class="section-title">Projects</h2>
-  </div>
-
-  <div class="tab-switcher fade-in stagger-1">
-    <button class="tab-btn active" onclick="switchTab('proj', 'professional', this)">Professional</button>
-    <button class="tab-btn" onclick="switchTab('proj', 'nonprofessional', this)">Personal</button>
-  </div>
-
-  <!-- Professional Projects -->
-  <div id="proj-professional" class="tab-content active">
-    <div class="projects-grid">
-
-      <div class="project-card fade-in">
-        <div class="project-number">01</div>
-        <div class="project-title">Project Alpha</div>
-        <div class="project-desc">A short, punchy description of what this project does and why it matters. What problem did you solve? Who did it help?</div>
-        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Tech A</span><span class="tag">Tech B</span></div>
-        <a href="#" class="project-link">View project →</a>
-        <div class="corner-fold"></div>
-      </div>
-
-      <div class="project-card fade-in stagger-1">
-        <div class="project-number">02</div>
-        <div class="project-title">Project Beta</div>
-        <div class="project-desc">Describe the scope, your role, and the outcome. Even better if you can link to it or show a screenshot somewhere.</div>
-        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Tech C</span><span class="tag">Tech D</span></div>
-        <a href="#" class="project-link">View project →</a>
-        <div class="corner-fold"></div>
-      </div>
-
-      <div class="project-card fade-in stagger-2">
-        <div class="project-number">03</div>
-        <div class="project-title">Project Gamma</div>
-        <div class="project-desc">Keep it concise but specific. Vague descriptions ("a web app") are less compelling than specific ones ("a tool that automates X for Y").</div>
-        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Tech E</span></div>
-        <a href="#" class="project-link">View project →</a>
-        <div class="corner-fold"></div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Personal Projects -->
-  <div id="proj-nonprofessional" class="tab-content">
-    <div class="projects-grid">
-
-      <div class="project-card fade-in" style="border-color: var(--green-ink);">
-        <div class="project-number" style="background:var(--green-ink);">P1</div>
-        <div class="project-title">Personal Project 1</div>
-        <div class="project-desc">A side project born out of curiosity or fun. Maybe it's a creative experiment, a tool you built for yourself, or something you gave to friends.</div>
-        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">For fun</span></div>
-        <a href="#" class="project-link">See it →</a>
-        <div class="corner-fold"></div>
-      </div>
-
-      <div class="project-card fade-in stagger-1" style="border-color: var(--red-pen);">
-        <div class="project-number" style="background:var(--red-pen);">P2</div>
-        <div class="project-title">Personal Project 2</div>
-        <div class="project-desc">Creative work, art, writing, music — anything that shows another side of you. Recruiters love seeing dimension.</div>
-        <div class="timeline-tags" style="margin-top:12px;"><span class="tag">Creative</span></div>
-        <a href="#" class="project-link">Explore →</a>
-        <div class="corner-fold"></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ===== RESUME ===== -->
-<section id="resume">
-  <div class="fade-in">
-    <h2 class="section-title">Resumé</h2>
-  </div>
-
-  <div class="resume-paper fade-in stagger-1">
-    <div style="font-family:'Caveat',cursive;font-size:2rem;font-weight:700;color:var(--ink-dark);">Your Full Name</div>
-    <div style="font-family:'Patrick Hand',cursive;font-size:1rem;color:var(--ink-light);margin-top:4px;">your.email@example.com · (123) 456-7890 · linkedin.com/in/yourhandle · yoursite.com</div>
-
-    <div class="resume-section-head">Education</div>
-    <div class="resume-item">
-      <strong>Bachelor's / Master's in Your Degree</strong> — Your University, City · 20XX–20XX<br>
-      Relevant coursework: Course A, Course B, Course C · GPA: X.XX
-    </div>
-
-    <div class="resume-section-head">Experience</div>
-    <div class="resume-item">
-      <strong>Job Title</strong> · Company Name · Jan 2024–Present<br>
-      • Accomplished X by doing Y, resulting in Z.<br>
-      • Led a team of N people to deliver a project on time and under budget.
-    </div>
-    <div class="resume-item">
-      <strong>Previous Role</strong> · Previous Company · Jun 2022–Dec 2023<br>
-      • Key achievement with measurable impact.<br>
-      • Another strong bullet point.
-    </div>
-
-    <div class="resume-section-head">Skills</div>
-    <div class="resume-item">
-      <strong>Technical:</strong> Skill A, Skill B, Skill C, Tool D<br>
-      <strong>Languages:</strong> English (native), Other (proficient)
-    </div>
-
-    <div class="resume-section-head">Awards & Activities</div>
-    <div class="resume-item">
-      Award / Scholarship / Honour · Year<br>
-      Club or Activity · Role · Years Active
-    </div>
-  </div>
-
-  <a href="https://drive.google.com/file/d/1c862J2Sz76lh6q_6Xry8heVW5DeyPwKZ/view?usp=sharing" download class="download-btn fade-in stagger-2">
-    ↓ Download my résumé
-  </a>
-</section>
-
-<!-- ===== CONTACT ===== -->
-<section id="contact">
-  <div class="fade-in">
-    <h2 class="section-title">Get in touch.</h2>
-  </div>
-
-  <p class="contact-note fade-in stagger-1">
-    I'm always happy to chat - whether it's about an opportunity, a project, or just grabbing a coffee.
-  </p>
-
-  <a class="envelope fade-in stagger-2" href="mailto:vanisahjwani@gmail.com" title="Send me an email">
-    <svg width="120" height="90" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Envelope body -->
-      <rect x="4" y="4" width="112" height="82" rx="2" stroke="#1a3a6b" stroke-width="2.5" fill="#fafaf7"/>
-      <!-- Envelope flap -->
-      <path d="M4 4 L60 52 L116 4" stroke="#1a3a6b" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
-      <!-- Bottom lines -->
-      <path d="M4 86 L44 50" stroke="#1a3a6b" stroke-width="2" stroke-linecap="round"/>
-      <path d="M116 86 L76 50" stroke="#1a3a6b" stroke-width="2" stroke-linecap="round"/>
-      <!-- Stamp doodle -->
-      <rect x="88" y="10" width="22" height="18" rx="1" stroke="#c0392b" stroke-width="1.5" fill="none"/>
-      <path d="M91 14 h4 M91 17 h8 M91 20 h6" stroke="#c0392b" stroke-width="1" stroke-linecap="round"/>
-      <!-- Address lines -->
-      <line x1="16" y1="62" x2="50" y2="62" stroke="#b8cce4" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="16" y1="68" x2="44" y2="68" stroke="#b8cce4" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="16" y1="74" x2="48" y2="74" stroke="#b8cce4" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-  </a>
-
-  <div class="fade-in stagger-3">
-    <a href="mailto:vanisahjwani@gmail.com" class="mail-link">vanisahjwani@gmail.com</a>
-  </div>
-
-  <svg class="doodles-contact fade-in stagger-4" width="300" height="60" viewBox="0 0 300 60" fill="none">
-    <path d="M20 30 Q40 10 60 30 Q80 50 100 30 Q120 10 140 30 Q160 50 180 30 Q200 10 220 30 Q240 50 260 30 Q280 10 300 30" stroke="#1a3a6b" stroke-width="1.5" fill="none"/>
-  </svg>
-</section>
 
 <script>
-// ===== DOODLE CANVAS =====
-const canvas = document.getElementById('doodle-board');
-const ctx = canvas.getContext('2d');
-let drawing = false;
-let hasDoodled = false;
+(function () {
+  "use strict";
 
-function resizeCanvas() {
-  const homeSection = document.getElementById('home');
-  canvas.width = homeSection.offsetWidth;
-  canvas.height = homeSection.offsetHeight;
-}
+  // Don't let the browser restore a mid-scroll position on reload.
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+  var FIRST = 6, LAST = 27;                 // transition frame filenames
+  var COUNT = LAST - FIRST + 1;             // 22 frames
+  var framesBox = document.getElementById("frames");
+  var frameEls = [];
+  var current = -1;
 
-canvas.addEventListener('mousedown', e => {
-  if (e.target !== canvas) return;
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(e.offsetX, e.offsetY);
-  if (!hasDoodled) {
-    hasDoodled = true;
-    document.getElementById('drawHint').style.display = 'none';
-    document.getElementById('clearBtn').style.display = 'block';
+  // Build the 22 frame elements up front, but DON'T assign `src` to all of
+  // them yet -- these are ~15MB combined, and doing so immediately on load
+  // forces the browser to fetch+decode all of it before the page even
+  // finishes opening. Instead each frame's `src` is set lazily, the moment
+  // it's actually about to be shown (see loadFrame/showFrame below), so
+  // opening the page only ever costs the one frame currently on screen.
+  for (var i = 0; i < COUNT; i++) {
+    var img = document.createElement("img");
+    img.className = "frame";
+    img.alt = "";
+    img.decoding = "async";
+    framesBox.appendChild(img);
+    frameEls.push(img);
   }
-});
 
-canvas.addEventListener('mousemove', e => {
-  if (!drawing) return;
-  ctx.lineTo(e.offsetX, e.offsetY);
-  ctx.strokeStyle = '#1a3a6b';
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.globalAlpha = 0.7;
-  ctx.stroke();
-});
-
-canvas.addEventListener('mouseup', () => drawing = false);
-canvas.addEventListener('mouseleave', () => drawing = false);
-
-// Touch support
-canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  const touch = e.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  drawing = true;
-  ctx.beginPath();
-  ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-  if (!hasDoodled) {
-    hasDoodled = true;
-    document.getElementById('drawHint').style.display = 'none';
-    document.getElementById('clearBtn').style.display = 'block';
+  function loadFrame(idx) {
+    var img = frameEls[idx];
+    if (!img.src) img.src = "transition/" + (FIRST + idx) + ".png";
   }
-}, { passive: false });
 
-canvas.addEventListener('touchmove', e => {
-  e.preventDefault();
-  if (!drawing) return;
-  const touch = e.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-  ctx.strokeStyle = '#1a3a6b';
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.globalAlpha = 0.7;
-  ctx.stroke();
-}, { passive: false });
+  function showFrame(idx) {
+    if (idx === current) return;
+    if (current >= 0) frameEls[current].classList.remove("on");
+    loadFrame(idx);
+    // Keep the scroll smooth by having the next frame in either direction
+    // ready before it's actually needed.
+    if (idx + 1 < COUNT) loadFrame(idx + 1);
+    if (idx - 1 >= 0) loadFrame(idx - 1);
+    frameEls[idx].classList.add("on");
+    current = idx;
+  }
+  showFrame(0);
 
-canvas.addEventListener('touchend', () => drawing = false);
+  var home = document.getElementById("home");
+  var nav  = document.getElementById("nav");
+  var wrap = document.getElementById("scrollWrap");
+  var framesLayer = document.querySelector(".frames");
 
-function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  hasDoodled = false;
-  document.getElementById('drawHint').style.display = 'flex';
-  document.getElementById('clearBtn').style.display = 'none';
-}
-
-// ===== TAB SWITCHER =====
-function switchTab(prefix, tab, btn) {
-  document.querySelectorAll(`[id^="${prefix}-"]`).forEach(el => el.classList.remove('active'));
-  document.getElementById(`${prefix}-${tab}`).classList.add('active');
-  btn.closest('.tab-switcher').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  // Trigger visibility for newly shown items
-  triggerVisibility();
-}
-
-// ===== SCROLL ANIMATIONS =====
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
-
-function triggerVisibility() {
-  document.querySelectorAll('.fade-in, .timeline-item, .project-card').forEach(el => {
-    observer.observe(el);
-  });
-}
-
-triggerVisibility();
-
-// ===== CURSOR TRAIL =====
-const trailContainer = document.getElementById('cursor-trail');
-const dots = [];
-const NUM_DOTS = 8;
-
-for (let i = 0; i < NUM_DOTS; i++) {
-  const dot = document.createElement('div');
-  dot.className = 'cursor-dot';
-  dot.style.opacity = (1 - i / NUM_DOTS) * 0.6;
-  dot.style.transform = `scale(${1 - i * 0.08})`;
-  trailContainer.appendChild(dot);
-  dots.push({ el: dot, x: 0, y: 0 });
-}
-
-let mouseX = 0, mouseY = 0;
-
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-function animateTrail() {
-  let x = mouseX, y = mouseY;
-  dots.forEach((dot, i) => {
-    dot.x += (x - dot.x) * (0.4 - i * 0.03);
-    dot.y += (y - dot.y) * (0.4 - i * 0.03);
-    dot.el.style.left = `${dot.x - 3}px`;
-    dot.el.style.top = `${dot.y - 3}px`;
-    x = dot.x;
-    y = dot.y;
-  });
-  requestAnimationFrame(animateTrail);
-}
-
-animateTrail();
-
-// ===== HOME ENTRANCE ANIMATION =====
-window.addEventListener('load', () => {
-  const nameHeading = document.querySelector('.name-heading');
-  const tagline = document.querySelector('.tagline');
-  const ctaBtn = document.querySelector('.cta-btn');
-  const stickyNotes = document.querySelectorAll('.sticky-note');
-  const sectionLabel = document.querySelector('#home .section-label');
-
-  [sectionLabel, nameHeading, tagline, ctaBtn].forEach((el, i) => {
-    if (!el) return;
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`;
-    requestAnimationFrame(() => {
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
+  // --- sounds ---
+  function snd(src, vol) { var a = new Audio(src); a.preload = "auto"; a.volume = vol; return a; }
+  var sndTear  = snd("tear.mp3",  0.9);
+  var sndHover = snd("hover.mp3", 0.55);
+  var sndClick = snd("click.mp3", 0.8);
+  function play(a) {
+    try { a.currentTime = 0; var pr = a.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    catch (e) {}
+  }
+  // Browsers block audio until the user interacts; prime the clips (silently)
+  // on the first gesture so the scroll-triggered tear can play afterwards.
+  var audioPrimed = false;
+  function primeAudio() {
+    if (audioPrimed) return;
+    audioPrimed = true;
+    [[sndTear, 0.9], [sndHover, 0.55], [sndClick, 0.8]].forEach(function (pair) {
+      var a = pair[0]; a.volume = 0;
+      try {
+        var pr = a.play();
+        if (pr && pr.then) pr.then(function () { a.pause(); a.currentTime = 0; a.volume = pair[1]; })
+                             .catch(function () { a.volume = pair[1]; });
+        else a.volume = pair[1];
+      } catch (e) { a.volume = pair[1]; }
     });
+  }
+  ["pointerdown", "touchstart", "keydown", "wheel"].forEach(function (ev) {
+    window.addEventListener(ev, primeAudio, { once: true, passive: true });
   });
 
-  stickyNotes.forEach((note, i) => {
-    note.style.opacity = '0';
-    note.style.transition = `opacity 0.5s ease ${0.8 + i * 0.2}s`;
-    requestAnimationFrame(() => { note.style.opacity = '1'; });
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  // smooth 0..1 ramp between edges e0..e1
+  function ramp(x, e0, e1) {
+    var t = clamp((x - e0) / (e1 - e0), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  // --- timeline (fraction of total scroll) ---
+  //  0.00–0.06  home holds
+  //  0.06–0.14  home fades / tear begins
+  //  0.14–0.80  stop-motion frames 6 -> 27
+  //  0.86–0.97  nav page fades in & becomes clickable
+  var tearArmed = true;
+  function render() {
+    var travel = wrap.offsetHeight - window.innerHeight;
+    var p = travel > 0 ? clamp(window.scrollY / travel, 0, 1) : 0;
+
+    // Tear sound: once as the transition kicks in; re-arm when back at the top.
+    if (p < 0.03) tearArmed = true;
+    if (tearArmed && p > 0.12) { play(sndTear); tearArmed = false; }
+
+    var homeOp = 1 - ramp(p, 0.06, 0.14);
+    home.style.opacity = homeOp;
+    home.style.pointerEvents = homeOp > 0.5 ? "auto" : "none";
+
+    var fp = ramp(p, 0.14, 0.80);           // 0..1 across the frame range
+    showFrame(Math.round(fp * (COUNT - 1)));
+
+    var navOp = ramp(p, 0.86, 0.97);
+    nav.style.opacity = navOp;
+    // Gate clickability on p itself (as soon as the tear finishes), not on the
+    // fade-in easing curve -- that curve only clears 0.6 in the last ~7% of a
+    // very long scroll track, so ordinary scrolling (momentum, not-quite-max
+    // scroll) could leave a visually-complete nav page silently unclickable.
+    nav.style.pointerEvents = p > 0.80 ? "auto" : "none";
+
+    // Fade the full-bleed frames out as the nav board fades in, so the
+    // final (fit-to-screen) layout isn't overlapped by the cover-scaled frame.
+    framesLayer.style.opacity = 1 - navOp;
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { render(); ticking = false; });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", render);
+
+  // Start at the very top on load -- unless we arrived from a section page's
+  // "nav" post-it (index.html#nav), in which case jump straight to the nav
+  // page (skip the transition) without playing the tear sound.
+  if (location.hash === "#nav") {
+    tearArmed = false;
+    window.scrollTo(0, wrap.offsetHeight - window.innerHeight);
+  } else {
+    window.scrollTo(0, 0);
+  }
+  render();
+
+  // Nav element sounds: hover.mp3 on entering a new element, click.mp3 on press.
+  var navels = document.querySelectorAll(".navel");
+  navels.forEach(function (a) {
+    a.addEventListener("mouseenter", function () { play(sndHover); });
+    a.addEventListener("pointerdown", function () { play(sndClick); });
   });
-});
+
+  // The "home" post-it returns to the top, which rewinds the transition.
+  var homeBtn = document.querySelector("[data-home]");
+  if (homeBtn) {
+    homeBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  // --- contact popup: opens over the nav page instead of navigating away;
+  // tapping the dim backdrop (anywhere outside the note) closes it and
+  // drops you right back on the same nav page underneath. ---
+  var contactModal    = document.getElementById("contactModal");
+  var contactBackdrop = document.getElementById("contactBackdrop");
+  var emailBtn        = document.querySelector('[data-modal="contact"]');
+  var lastFocused      = null;
+
+  // NOTE: don't freeze scroll via `overflow:hidden` on <html>/<body> here --
+  // the whole page relies on a `position: sticky` scroll trick to pin the
+  // corkboard scene in place, and toggling overflow:hidden on the scrolling
+  // root breaks that stickiness (the scene snaps away, leaving a blank
+  // background behind the modal). Block scroll INPUT instead, which stops
+  // the position from changing without touching the sticky context at all.
+  function blockScrollKeys(e) {
+    var keys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "];
+    if (keys.indexOf(e.key) !== -1) e.preventDefault();
+  }
+  function preventScroll(e) { e.preventDefault(); }
+
+  function openModal() {
+    lastFocused = document.activeElement;
+    contactModal.classList.add("open");
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("touchmove", preventScroll, { passive: false });
+    window.addEventListener("keydown", blockScrollKeys, { passive: false });
+  }
+  function closeModal() {
+    contactModal.classList.remove("open");
+    window.removeEventListener("wheel", preventScroll, { passive: false });
+    window.removeEventListener("touchmove", preventScroll, { passive: false });
+    window.removeEventListener("keydown", blockScrollKeys, { passive: false });
+    if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  if (emailBtn) {
+    emailBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      openModal();
+    });
+  }
+  contactBackdrop.addEventListener("click", closeModal);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && contactModal.classList.contains("open")) closeModal();
+  });
+})();
 </script>
 </body>
 </html>

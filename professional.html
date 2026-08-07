@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" type="image/png" href="assets/fav1.png" />
+<title>Professional — Vani's Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"TC October"; src:url("assets/fonts/TcOctoberRegular-e9jgO.otf") format("opentype"); font-display:swap; }
+  /* Swapped out for KG Makes You Stronger (Kimberly Geswein) in place of the
+     CoalhandLuke trial font, which wasn't licensed for web embedding. */
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  html { background: #e9e6df; }
+  body {
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* A fixed, full-viewport background element instead of `background-attachment:
+     fixed` on body -- the latter forces Safari to repaint the whole background
+     on every scroll frame, which is a well-known source of scroll jank on pages
+     with a large cover image like this one. This gets the same pinned-background
+     look with none of the repaint cost. */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: url("assets/4.png") center center / cover no-repeat;
+  }
+
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 11vh 7vw 14vh;
+  }
+  /* On narrow viewports the content column reaches full width, so text
+     would otherwise scroll underneath the fixed postit row. Reserve a
+     matching strip on the right so it never does. Desktop is unaffected
+     since max-width already keeps the column clear of that corner. */
+  @media (max-width: 700px) {
+    .page { padding-right: 150px; }
+  }
+
+  /* Fixed top-right, same as experiences.html -- out of document flow
+     entirely, so it never costs vertical space or wraps. */
+  .postit-row {
+    position: fixed;
+    top: 3vh;
+    right: 3vw;
+    display: flex;
+    gap: 2.4vw;
+    z-index: 20;
+  }
+
+  .title {
+    font-family: "TC October", "Permanent Marker", cursive;
+    font-size: clamp(2.6rem, 7.5vw, 4.6rem);
+    color: #382c22;
+    transform: rotate(-1deg);
+    margin: 0;
+  }
+
+  .entry { margin-bottom: 3em; padding-bottom: 2.2em; border-bottom: 2px dashed rgba(56,44,34,.28); }
+  .entry:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .entry h2 {
+    font-family: "CoalhandLuke", cursive;
+    font-weight: normal;
+    font-size: clamp(1.55rem, 3.8vw, 2.15rem);
+    color: #2f251c;
+    margin: 0 0 .2em;
+    line-height: 1.2;
+  }
+
+  .badge {
+    font-family: "Besom", "Permanent Marker", cursive;
+    display: inline-block;
+    font-size: .78rem;
+    letter-spacing: .03em;
+    padding: .28em .7em;
+    margin-left: .5em;
+    background: #382c22;
+    color: #f6ead9;
+    border-radius: 999px;
+    transform: rotate(-2deg) translateY(-2px);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .meta {
+    font-family: "Over the Rainbow", cursive;
+    font-size: 1.3rem;
+    color: #7a6a58;
+    margin: 0 0 .7em;
+  }
+
+  .entry p:not(.meta) {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+    line-height: 1.65;
+    color: #3c2f24;
+    margin: 0;
+  }
+
+  /* postits (linkedin/github/email/nav-back), same visual language as the
+     other pages. */
+  .navel {
+    width: min(8.2vw, 68px);
+    display: block;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .navel .art {
+    display: block;
+    width: 100%; height: auto;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    transition: transform .12s ease, filter .1s ease;
+  }
+  .navel:focus-visible { outline: none; }
+  .navel:hover .art, .navel:focus-visible .art {
+    transform: scale(1.08);
+    filter:
+      drop-shadow( 2.5px  0     0 #fff) drop-shadow(-2.5px  0     0 #fff)
+      drop-shadow( 0      2.5px 0 #fff) drop-shadow( 0     -2.5px 0 #fff)
+      drop-shadow( 1.8px  1.8px 0 #fff) drop-shadow(-1.8px  1.8px 0 #fff)
+      drop-shadow( 1.8px -1.8px 0 #fff) drop-shadow(-1.8px -1.8px 0 #fff)
+      drop-shadow( 0 6px 9px rgba(0,0,0,.28));
+  }
+
+  /* ---- contact popup (identical to the nav page) ---- */
+  .modal {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop {
+    position: absolute; inset: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .contact-note {
+    position: relative;
+    width: min(90vw, 420px);
+    transform: rotate(2.8deg);
+  }
+  .modal.open .contact-note { animation: pop .35s ease; }
+  .contact-note img {
+    width: 100%; display: block;
+    pointer-events: none; user-select: none; -webkit-user-drag: none;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(12px) scale(.96) rotate(-2.8deg); }
+    to   { opacity: 1; transform: translateY(0)    scale(1)   rotate(-2.8deg); }
+  }
+  .contact-note .note {
+    position: absolute; inset: 0;
+    padding: 15% 11%;
+    display: flex; flex-direction: column; justify-content: flex-start;
+  }
+  .contact-note .line {
+    color: #575757;
+    text-shadow: .25px .25px 0 rgba(0, 0, 0, .15);
+    letter-spacing: .02em;
+    line-height: 1.05;
+  }
+  .contact-note .title {
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.8rem, 6.5vw, 3.2rem);
+    margin-bottom: clamp(14px, 4vw, 32px);
+    transform: rotate(-1deg);
+  }
+  .contact-note .row {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1.1rem, 3.8vw, 2.2rem);
+    margin-bottom: clamp(10px, 3vw, 24px);
+    transform: rotate(.8deg);
+  }
+  .contact-note .note a {
+    color: inherit; text-decoration: none;
+    width: max-content; transition: .15s ease;
+  }
+  .contact-note .note a:hover  { opacity: .65; transform: translateX(2px); }
+  .contact-note .note a:active { transform: translateX(3px); }
+</style>
+</head>
+<body>
+
+  <div class="bg"></div>
+
+  <div class="postit-row">
+    <a class="navel" id="pr-linkedin" href="https://www.linkedin.com/in/vani-sahjwani/" aria-label="LinkedIn"><img class="art" src="assets/37.png" alt="LinkedIn" /></a>
+    <a class="navel" id="pr-github" href="https://github.com/vsahjwani" aria-label="GitHub"><img class="art" src="assets/34.png" alt="GitHub" /></a>
+    <a class="navel" id="pr-email" data-modal="contact" href="contact.html" aria-label="Email"><img class="art" src="assets/36.png" alt="Email" /></a>
+    <a class="navel" id="pr-nav" href="index.html#nav" aria-label="Back to nav page"><img class="art" src="assets/38.png" alt="Nav" /></a>
+  </div>
+
+  <div class="page">
+    <h1 class="title">Professional</h1>
+
+    <div class="entry">
+      <h2>Data Science Associate <span class="badge">Present</span></h2>
+      <p class="meta">OPN Healthcare · Jul 2026 – Present · Glendale, CA</p>
+      <p>The uncomfortable part of patient stratification is that there's no ground truth to check yourself against — you're not predicting a label that eventually gets revealed, you're arguing that a clustering is meaningful at all. That's why most of this role has been about benchmarking, not modeling: running the same patient population through MDBSCAN, GMM, LCA, and Archetypal Analysis and asking which clusters are actually stable versus which ones just look convincing in one particular run. The most useful thing I've built isn't a single model, it's a way of engineering multi-source healthcare records into a dataset stable enough that the differences between methods reflect something real about patient similarity, not just noise in how the data was assembled. It's ongoing, but it's already reshaped how skeptical I am of any clustering result I can't stress-test.</p>
+    </div>
+
+    <div class="entry">
+      <h2>Software Engineer Intern</h2>
+      <p class="meta">Stealth AI Startup · Apr – Jul 2026 · Remote</p>
+      <p>At an early-stage startup, the scraping pipelines I built weren't a side tool for someone else's analysis — they were the dataset the entire product ran on, which meant a silent failure upstream broke things for everyone downstream, immediately. That pressure changed how I wrote code; reliability stopped being an abstraction and started being the difference between a normal Tuesday and a very bad one. The bigger shift was being in the room for product decisions, not just execution — prototyping a feature, watching it get picked apart in feedback, and rebuilding it the same week. I came in expecting to write software and left with a much better sense of how much of a startup's early direction gets decided in those small, fast iterations rather than in any single big decision.</p>
+    </div>
+
+    <div class="entry">
+      <h2>Quantitative Data Intern</h2>
+      <p class="meta">Alpha Alternatives · Jul – Aug 2025 · Mumbai</p>
+      <p>Most of this internship was spent on a problem nobody puts in a textbook: the data you actually need — mutual fund portfolios, bulk deals — mostly exists as PDFs and half-structured web pages, not clean tables. I built the scraping and parsing pipelines to fix that, which taught me that data engineering and data science aren't really separate jobs, just two ends of the same problem. The part I found genuinely interesting was further downstream — using Ornstein–Uhlenbeck processes and Kalman filtering to model fund flows as a mean-reverting time series instead of a random walk. It reframed what I thought a "clean dataset" even meant: the millions of rows I'd normalized were only useful once I had a model that assumed something specific about how they moved over time.</p>
+    </div>
+
+    <div class="entry">
+      <h2>Data Science Intern</h2>
+      <p class="meta">IDXExchange · Jun – Aug 2025</p>
+      <p>This was the first time I was responsible for a team's output, not just my own, and it changed how I thought about the modeling. Benchmarking Linear Regression against Random Forest against XGBoost for property price prediction is a well-worn exercise, but leading the intern team through it meant the real work was making sure everyone's piece — the feature engineering, the geospatial EDA, the eventual model — actually fit together instead of just existing in separate notebooks. The test that mattered most wasn't the standard train/test split; it was validating on months the model hadn't seen yet, a much less forgiving way to find out whether an R² is real or just memorized. Presenting the results to senior data scientists and getting sent back to iterate more than once was its own lesson in how much a model's first version is really just a draft.</p>
+    </div>
+
+    <div class="entry">
+      <h2>Wealth Management Intern</h2>
+      <p class="meta">Kredere Wealth Partners · Jul – Aug 2024 · Mumbai</p>
+      <p>This was my first real look at how much of wealth management is just disciplined reading. Every morning started the same way — Economic Times, Financial Times, Trading Economics — and turned into a digest that someone senior would actually use to talk to a client that day. What surprised me was how little room there was for a hot take; a mutual fund report only mattered if I could show my reasoning held up against the last six months of data, not just the last headline. Working alongside my mentor on Indian mutual fund research taught me the difference between summarizing a market and actually having a position on it — and how much more careful you have to be once your writing might shape someone else's portfolio.</p>
+    </div>
+
+    <div class="entry">
+      <h2>Tutor, Math Academic Success Center</h2>
+      <p class="meta">UC San Diego · Sep 2024 – Jun 2026 · Part-time</p>
+      <p>Tutoring turned out to be the best diagnostic I've had for whether I actually understand something, because a room full of students will find the gap in your explanation faster than any professor will. The students who struggled most were rarely missing the mechanics — they could follow the steps — what they were missing was confidence that they were allowed to get it wrong on the way to getting it right. Most sessions ended up being less about the specific problem on the page and more about getting someone to try an approach they weren't sure about yet. It's a strange thing to put next to internships on a resume, but explaining the same concept five different ways until one of them lands taught me more about communicating technical work clearly than most of the technical work itself did.</p>
+    </div>
+
+    <div class="entry">
+      <h2>Market Research Intern</h2>
+      <p class="meta">Samyog Health Foods · Jun – Sep 2022 · Mumbai</p>
+      <p>This was my first project where the data came from actual conversations instead of a downloaded dataset — I designed and ran surveys to figure out whether Prolicious could realistically expand into a new market. The uncomfortable lesson was that people are bad at predicting their own behavior; what respondents said they'd buy and what the follow-up questions revealed about their actual habits didn't always line up, and learning to trust the second one over the first was most of the analysis. It was a small project, but it's the reason I still think about the gap between stated and revealed preference before I trust any survey number at face value.</p>
+    </div>
+  </div>
+
+  <!-- CONTACT POPUP -->
+  <div class="modal" id="contactModal">
+    <div class="modal-backdrop" id="contactBackdrop"></div>
+    <div class="contact-note">
+      <img src="assets/39.png" alt="Sticky note" />
+      <div class="note">
+        <div class="line title">say hi!</div>
+        <a class="line row" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
+        <a class="line row" href="tel:6199539182">(619) 953-9182</a>
+        <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">linkedin.com</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+  function snd(src, vol) { var a = new Audio(src); a.preload = "auto"; a.volume = vol; return a; }
+  var sndHover = snd("hover.mp3", 0.55);
+  var sndClick = snd("click.mp3", 0.8);
+  function play(a) {
+    try { a.currentTime = 0; var pr = a.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    catch (e) {}
+  }
+  var audioPrimed = false;
+  function primeAudio() {
+    if (audioPrimed) return;
+    audioPrimed = true;
+    [[sndHover, 0.55], [sndClick, 0.8]].forEach(function (pair) {
+      var a = pair[0]; a.volume = 0;
+      try {
+        var pr = a.play();
+        if (pr && pr.then) pr.then(function () { a.pause(); a.currentTime = 0; a.volume = pair[1]; })
+                             .catch(function () { a.volume = pair[1]; });
+        else a.volume = pair[1];
+      } catch (e) { a.volume = pair[1]; }
+    });
+  }
+  ["pointerdown", "touchstart", "keydown"].forEach(function (ev) {
+    window.addEventListener(ev, primeAudio, { once: true, passive: true });
+  });
+  document.querySelectorAll(".navel").forEach(function (a) {
+    a.addEventListener("mouseenter", function () { play(sndHover); });
+    a.addEventListener("pointerdown", function () { play(sndClick); });
+  });
+
+  // --- contact popup (identical behavior to the nav page) ---
+  var contactModal    = document.getElementById("contactModal");
+  var contactBackdrop = document.getElementById("contactBackdrop");
+  var emailBtn        = document.querySelector('[data-modal="contact"]');
+  var lastFocused     = null;
+  function openModal() { lastFocused = document.activeElement; contactModal.classList.add("open"); }
+  function closeModal() { contactModal.classList.remove("open"); if (lastFocused && lastFocused.focus) lastFocused.focus(); }
+  if (emailBtn) emailBtn.addEventListener("click", function (e) { e.preventDefault(); openModal(); });
+  contactBackdrop.addEventListener("click", closeModal);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && contactModal.classList.contains("open")) closeModal();
+  });
+})();
+</script>
+</body>
+</html>

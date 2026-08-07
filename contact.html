@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="assets/fav1.png" />
+<title>Contact</title>
+
+<style>
+
+@font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:transparent;
+    overflow:hidden;
+}
+
+.contact-note{
+    position:relative;
+    width:420px;
+    transform:rotate(2.8deg);
+    animation:pop .35s ease;
+}
+
+@keyframes pop{
+    from{
+        opacity:0;
+        transform:translateY(12px) scale(.96) rotate(-2.8deg);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1) rotate(-2.8deg);
+    }
+}
+
+.contact-note img{
+    width:100%;
+    display:block;
+    pointer-events:none;
+}
+
+.note{
+    position:absolute;
+    inset:0;
+    padding:15% 11%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+.line{
+    color:#575757;
+    text-shadow:.25px .25px 0 rgba(0,0,0,.15);
+    letter-spacing:.02em;
+    line-height:1.05;
+}
+
+.title{
+    font-family:"CoalhandLuke", cursive;
+    font-size:3.2rem;
+    margin-bottom:32px;
+    transform:rotate(-1deg);
+}
+
+.row{
+    font-family:"CoalhandLuke", cursive;
+    font-size:2.2rem;
+    margin-bottom:24px;
+    transform:rotate(.8deg);
+}
+
+.note a{
+    color:inherit;
+    text-decoration:none;
+    width:max-content;
+    transition:.15s ease;
+}
+
+.note a:hover{
+    opacity:.65;
+    transform:translateX(2px);
+}
+
+.note a:active{
+    transform:translateX(3px);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="contact-note">
+
+    <img src="assets/39.png" alt="Sticky Note">
+
+    <div class="note">
+
+        <div class="line title">
+            say hi!
+        </div>
+
+        <a class="line row" href="mailto:vanisahjwani@gmail.com">
+            vanisahjwani@gmail.com
+        </a>
+
+        <a class="line row" href="tel:6199539182">
+            (619) 953-9182
+        </a>
+
+
+        <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">
+            linkedin.com
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+
+
+
+
