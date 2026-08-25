@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" type="image/png" href="assets/fav1.png" />
+<title>Off the Clock: Vani's Archive</title>
+<style>
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+
+  /* Off the Clock — mirrors experiences.html: corkboard backdrop + a board
+     that scales/reflows to any screen. Here the two "elements" are open
+     books (54.png, 55.png); each book's LEFT and RIGHT page is a separate
+     clickable link with the same white-outline hover + hover/click sounds. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  html { background: #e9e6df; }
+  body {
+    overflow: hidden;                     /* single-screen board, no scroll */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .corkboard {
+    position: fixed; inset: 0;
+    background: url("assets/5.png") center center / cover no-repeat;
+    z-index: 0;
+  }
+
+  .navboard {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    width:  min(100vw, calc(100svh * 16 / 9));
+    height: min(100svh, calc(100vw * 9 / 16));
+  }
+
+  /* a book = a full image with two clickable page-halves layered on top */
+  .book {
+    position: absolute;
+    transform: translate(-50%, -50%);
+  }
+  .book .bookimg {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,.28));
+  }
+  .half {
+    position: absolute;
+    top: 4%;
+    height: 92%;
+    width: 46%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 5%;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: box-shadow .12s ease, background .12s ease;
+  }
+  .half-l { left: 3%; }
+  .half-r { right: 3%; }
+  /* crisp white page-outline on hover/focus -- the same signature look as
+     the nav/experiences elements, applied to just the hovered page. */
+  .half:hover, .half:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 3px #fff, inset 0 0 26px rgba(0,0,0,.16), 0 0 0 2px rgba(255,255,255,.35);
+    background: rgba(255,255,255,.05);
+  }
+
+  /* a small handwritten tag names each page -- always visible (so the four
+     zones are obvious on touch screens too), and it pops on hover. */
+  .tag {
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(.95rem, 2vw, 1.5rem);
+    color: #2f251c;
+    background: rgba(253,250,243,.92);
+    padding: .12em .7em .05em;
+    border-radius: 999px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.28);
+    white-space: nowrap;
+    transform: rotate(-2deg);
+    transition: transform .12s ease, opacity .12s ease;
+    opacity: .82;
+    pointer-events: none;
+  }
+  .half:hover .tag, .half:focus-visible .tag { opacity: 1; transform: rotate(-2deg) scale(1.12); }
+  .half-r .tag { transform: rotate(2deg); }
+  .half-r:hover .tag, .half-r:focus-visible .tag { transform: rotate(2deg) scale(1.12); }
+
+  /* ---------- LANDSCAPE positions ---------- */
+  #book-a { left: 26%; top: 55%; width: 45%; }   /* 54: essays | piano */
+  #book-b { left: 74%; top: 55%; width: 45%; }   /* 55: photography | art */
+
+  /* post-its -- same PNGs/positions/links as the nav + experiences pages */
+  .navel {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: block;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .navel .art {
+    display: block; width: 100%; height: auto;
+    pointer-events: none; -webkit-user-drag: none; user-select: none;
+    transition: transform .12s ease, filter .1s ease;
+  }
+  .navel:hover { z-index: 10; }
+  .navel:focus-visible { outline: none; }
+  .navel:hover .art, .navel:focus-visible .art {
+    transform: scale(1.05);
+    filter:
+      drop-shadow( 2.5px  0     0 #fff) drop-shadow(-2.5px  0     0 #fff)
+      drop-shadow( 0      2.5px 0 #fff) drop-shadow( 0     -2.5px 0 #fff)
+      drop-shadow( 1.8px  1.8px 0 #fff) drop-shadow(-1.8px  1.8px 0 #fff)
+      drop-shadow( 1.8px -1.8px 0 #fff) drop-shadow(-1.8px -1.8px 0 #fff)
+      drop-shadow( 0 6px 9px rgba(0,0,0,.28));
+  }
+  #o-linkedin { left: 74%; top: 8%;  width: 10.1%; }
+  #o-github   { left: 76%; top: 22%; width: 10.1%; }
+  #o-email    { left: 85%; top: 9%;  width: 9.9%;  }
+  #o-nav      { left: 94%; top: 13%; width: 10.1%; }
+
+  /* ---------- SQUARE / PORTRAIT: taller board, books stacked ---------- */
+  @media (max-aspect-ratio: 1/1) {
+    .navboard {
+      width:  min(100vw, calc(100svh * 3 / 4));
+      height: min(100svh, calc(100vw * 4 / 3));
+    }
+    #book-a { left: 50%; top: 42%; width: 88%; }
+    #book-b { left: 50%; top: 76%; width: 88%; }
+    #o-linkedin { left: 20%; top: 6%; width: 15%;   }
+    #o-github   { left: 40%; top: 6%; width: 15%;   }
+    #o-email    { left: 60%; top: 6%; width: 14.7%; }
+    #o-nav      { left: 80%; top: 6%; width: 15%;   }
+  }
+
+  /* ---- contact popup (identical to the nav page) ---- */
+  .modal {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop {
+    position: absolute; inset: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .contact-note {
+    position: relative;
+    width: min(90vw, 420px);
+    transform: rotate(2.8deg);
+  }
+  .modal.open .contact-note { animation: pop .35s ease; }
+  .contact-note img {
+    width: 100%; display: block;
+    pointer-events: none; user-select: none; -webkit-user-drag: none;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(12px) scale(.96) rotate(-2.8deg); }
+    to   { opacity: 1; transform: translateY(0)    scale(1)   rotate(-2.8deg); }
+  }
+  .contact-note .note {
+    position: absolute; inset: 0;
+    padding: 15% 11%;
+    display: flex; flex-direction: column; justify-content: flex-start;
+  }
+  .contact-note .line {
+    color: #575757;
+    text-shadow: .25px .25px 0 rgba(0, 0, 0, .15);
+    letter-spacing: .02em;
+    line-height: 1.05;
+  }
+  .contact-note .title {
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.8rem, 6.5vw, 3.2rem);
+    margin-bottom: clamp(14px, 4vw, 32px);
+    transform: rotate(-1deg);
+  }
+  .contact-note .row {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1.1rem, 3.8vw, 2.2rem);
+    margin-bottom: clamp(10px, 3vw, 24px);
+    transform: rotate(.8deg);
+  }
+  .contact-note .note a {
+    color: inherit; text-decoration: none;
+    width: max-content; transition: .15s ease;
+  }
+  .contact-note .note a:hover  { opacity: .65; transform: translateX(2px); }
+  .contact-note .note a:active { transform: translateX(3px); }
+</style>
+</head>
+<body>
+
+  <div class="corkboard"></div>
+
+  <div class="navboard">
+
+    <!-- 54.png : left page = essays, right page = piano -->
+    <div class="book" id="book-a">
+      <img class="bookimg" src="assets/54.png" alt="Essays and piano" />
+      <a class="half half-l" href="essays.html" aria-label="Essays"><span class="tag">essays ↗</span></a>
+      <a class="half half-r" href="piano.html" aria-label="Piano"><span class="tag">piano ↗</span></a>
+    </div>
+
+    <!-- 55.png : left page = photography, right page = art -->
+    <div class="book" id="book-b">
+      <img class="bookimg" src="assets/55.png" alt="Photography and art" />
+      <a class="half half-l" href="photography.html" aria-label="Photography"><span class="tag">photography ↗</span></a>
+      <a class="half half-r" href="art.html" aria-label="Art"><span class="tag">art ↗</span></a>
+    </div>
+
+    <!-- post-its -->
+    <a class="navel" id="o-linkedin" href="https://www.linkedin.com/in/vani-sahjwani/" aria-label="LinkedIn"><img class="art" src="assets/37.png" alt="LinkedIn" /></a>
+    <a class="navel" id="o-github" href="https://github.com/vsahjwani" aria-label="GitHub"><img class="art" src="assets/34.png" alt="GitHub" /></a>
+    <a class="navel" id="o-email" data-modal="contact" href="contact.html" aria-label="Email"><img class="art" src="assets/36.png" alt="Email" /></a>
+    <a class="navel" id="o-nav" href="index.html#nav" aria-label="Back to nav page"><img class="art" src="assets/38.png" alt="Nav" /></a>
+  </div>
+
+  <!-- CONTACT POPUP -->
+  <div class="modal" id="contactModal">
+    <div class="modal-backdrop" id="contactBackdrop"></div>
+    <div class="contact-note">
+      <img src="assets/39.png" alt="Sticky note" />
+      <div class="note">
+        <div class="line title">say hi!</div>
+        <a class="line row" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
+        <a class="line row" href="tel:6199539182">(619) 953-9182</a>
+        <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">linkedin.com</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+  function snd(src, vol) { var a = new Audio(src); a.preload = "auto"; a.volume = vol; return a; }
+  var sndHover = snd("hover.mp3", 0.55);
+  var sndClick = snd("click.mp3", 0.8);
+  function play(a) {
+    try { a.currentTime = 0; var pr = a.play(); if (pr && pr.catch) pr.catch(function () {}); }
+    catch (e) {}
+  }
+  var audioPrimed = false;
+  function primeAudio() {
+    if (audioPrimed) return;
+    audioPrimed = true;
+    [[sndHover, 0.55], [sndClick, 0.8]].forEach(function (pair) {
+      var a = pair[0]; a.volume = 0;
+      try {
+        var pr = a.play();
+        if (pr && pr.then) pr.then(function () { a.pause(); a.currentTime = 0; a.volume = pair[1]; })
+                             .catch(function () { a.volume = pair[1]; });
+        else a.volume = pair[1];
+      } catch (e) { a.volume = pair[1]; }
+    });
+  }
+  ["pointerdown", "touchstart", "keydown"].forEach(function (ev) {
+    window.addEventListener(ev, primeAudio, { once: true, passive: true });
+  });
+
+  // hover.mp3 on entering a new page/postit, click.mp3 on press
+  document.querySelectorAll(".half, .navel").forEach(function (a) {
+    a.addEventListener("mouseenter", function () { play(sndHover); });
+    a.addEventListener("pointerdown", function () { play(sndClick); });
+  });
+
+  // --- contact popup ---
+  var contactModal    = document.getElementById("contactModal");
+  var contactBackdrop = document.getElementById("contactBackdrop");
+  var emailBtn        = document.querySelector('[data-modal="contact"]');
+  var lastFocused     = null;
+  function openModal() { lastFocused = document.activeElement; contactModal.classList.add("open"); }
+  function closeModal() { contactModal.classList.remove("open"); if (lastFocused && lastFocused.focus) lastFocused.focus(); }
+  if (emailBtn) emailBtn.addEventListener("click", function (e) { e.preventDefault(); openModal(); });
+  contactBackdrop.addEventListener("click", closeModal);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && contactModal.classList.contains("open")) closeModal();
+  });
+})();
+</script>
+</body>
+</html>

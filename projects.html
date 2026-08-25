@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <link rel="icon" type="image/png" href="assets/fav1.png" />
-<title>Projects — Vani's Archive</title>
+<title>Projects: Vani's Archive</title>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
@@ -94,8 +94,8 @@
 
   .link {
     display: inline-block;
-    font-family: "Over the Rainbow", cursive;
-    font-size: 1.35rem;
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.15rem, 3.8vw, 1.55rem);
     color: #6b4a2f;
     text-decoration: none;
     margin-bottom: .7em;
@@ -104,7 +104,7 @@
   .link:hover { opacity: .65; transform: translateX(2px); }
 
   .project p {
-    font-family: "Over the Rainbow", cursive;
+    font-family: "Geneva";
     font-size: clamp(1.05rem, 2.4vw, 1.35rem);
     line-height: 1.65;
     color: #3c2f24;
@@ -219,7 +219,7 @@
     <div class="project">
       <h2>Seafood &amp; Health: Predictive Modeling</h2>
       <a class="link" href="https://kareenf04.github.io/seafood_health_analysis/" target="_blank" rel="noopener">kareenf04.github.io/seafood_health_analysis</a>
-      <p>The question behind this project was what actually makes seafood distinctly healthy. The answer turned out to be a specific nutritional blend: high protein, relatively low calories, and a good ratio of unsaturated fat. I quantified that blend as a composite health score across 83,000 recipes, and once that feature existed, the rest of the problem became much simpler. A Decision Tree, tuned with GridSearchCV, used that health score to predict whether a recipe contained seafood with 92.1% test accuracy.</p>
+      <p>Through this project I learnt that good feature engineering can lead to the simplest and most accurate models. The question behind this project was whether seafood was distinctly healthy. After a little bit of research, creating nutritional blend feature of high protein, relatively low calories, and a unsaturated fat led use to the answer. I quantified that blend as a composite health score across 83,000 recipes, and once that feature existed, the rest of the problem became much simpler. A Decision Tree, tuned with GridSearchCV, used that health score to predict whether a recipe contained seafood with 92.1% test accuracy.</p>
     </div>
 
     <div class="project">

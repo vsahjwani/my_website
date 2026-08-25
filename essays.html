@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" type="image/png" href="assets/fav1.png" />
+<title>Essays: Vani's Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"TC October"; src:url("assets/fonts/TcOctoberRegular-e9jgO.otf") format("opentype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  html { background: #e9e6df; }
+  body { min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+  .bg { position: fixed; inset: 0; z-index: -1; background: url("assets/4.png") center center / cover no-repeat; }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 11vh 6vw 12vh; }
+  @media (max-width: 700px) { .page { padding: 10vh 5vw 10vh; } }
+
+  .title {
+    font-family: "TC October", "Permanent Marker", cursive;
+    font-size: clamp(2.6rem, 7.5vw, 4.6rem);
+    color: #382c22; transform: rotate(-1deg); margin: 0 0 .1em;
+  }
+  .intro {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    color: #4a3c2c; margin: 0 0 2em; max-width: 44ch; line-height: 1.55;
+  }
+
+  .theme { margin: 0 0 2.4em; }
+  .theme h2 {
+    font-family: "CoalhandLuke", cursive; font-weight: normal;
+    font-size: clamp(1.4rem, 3.4vw, 2rem);
+    color: #6b4a2f; margin: 0 0 .1em; transform: rotate(-.5deg);
+  }
+  .theme .sub {
+    font-family: "Over the Rainbow", cursive;
+    font-size: .95rem; color: #8a765c; margin: 0 0 1em;
+  }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+
+  /* each essay = a little sheet of paper you can pick up */
+  .paper {
+    display: block; text-decoration: none; color: #2f251c;
+    background: #fbf7ee;
+    border: 1px solid rgba(56,44,34,.12);
+    border-radius: 3px;
+    padding: 20px 20px 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.16);
+    transition: transform .14s ease, box-shadow .14s ease;
+    position: relative;
+    min-height: 150px;
+  }
+  .paper:nth-child(3n+1) { transform: rotate(-.8deg); }
+  .paper:nth-child(3n+2) { transform: rotate(.6deg); }
+  .paper:hover { transform: translateY(-4px) rotate(0deg); box-shadow: 0 14px 26px rgba(0,0,0,.24); }
+  .paper .kind {
+    font-family: "Over the Rainbow", cursive; font-size: .82rem;
+    color: #a06a3c; letter-spacing: .04em; text-transform: uppercase; margin-bottom: .3em;
+  }
+  .paper .h {
+    font-family: "CoalhandLuke", cursive; font-size: 1.5rem; line-height: 1.1; margin-bottom: .25em;
+  }
+  .paper .course { font-family: "Over the Rainbow", cursive; font-size: .95rem; color: #6b5946; }
+  .paper .blurb {
+    font-family: "Over the Rainbow", cursive; font-size: .92rem; color: #4a3c2c;
+    line-height: 1.5; margin-top: .6em;
+  }
+  .paper .read {
+    font-family: "CoalhandLuke", cursive; font-size: 1.05rem; color: #6b4a2f;
+    margin-top: .8em; display: inline-block;
+  }
+  .paper:hover .read { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* post-its (fixed top-right) */
+  .postit-row { position: fixed; top: 3vh; right: 3vw; display: flex; gap: 2.4vw; z-index: 20; }
+  .navel { width: min(8.2vw, 64px); display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .navel .art {
+    display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; user-select: none;
+    transition: transform .12s ease, filter .1s ease;
+  }
+  .navel:focus-visible { outline: none; }
+  .navel:hover .art, .navel:focus-visible .art {
+    transform: scale(1.08);
+    filter:
+      drop-shadow( 2.5px  0 0 #fff) drop-shadow(-2.5px  0 0 #fff)
+      drop-shadow( 0  2.5px 0 #fff) drop-shadow( 0 -2.5px 0 #fff)
+      drop-shadow( 1.8px 1.8px 0 #fff) drop-shadow(-1.8px 1.8px 0 #fff)
+      drop-shadow( 1.8px -1.8px 0 #fff) drop-shadow(-1.8px -1.8px 0 #fff)
+      drop-shadow( 0 6px 9px rgba(0,0,0,.28));
+  }
+  @media (max-width: 700px) {
+    .postit-row { flex-direction: column; top: 50%; right: 2vw; transform: translateY(-50%); gap: 2vh; }
+    .navel { width: 44px; }
+  }
+
+  /* ---- contact popup ---- */
+  .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop { position: absolute; inset: 0; background: transparent; cursor: pointer; }
+  .contact-note { position: relative; width: min(90vw, 420px); transform: rotate(2.8deg); }
+  .modal.open .contact-note { animation: pop .35s ease; }
+  .contact-note img { width: 100%; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+  @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.96) rotate(-2.8deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(-2.8deg); } }
+  .contact-note .note { position: absolute; inset: 0; padding: 15% 11%; display: flex; flex-direction: column; justify-content: flex-start; }
+  .contact-note .line { color: #575757; text-shadow: .25px .25px 0 rgba(0,0,0,.15); letter-spacing: .02em; line-height: 1.05; }
+  .contact-note .title { font-family: "CoalhandLuke", cursive; font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: clamp(14px, 4vw, 32px); transform: rotate(-1deg); }
+  .contact-note .row { font-family: "Over the Rainbow", cursive; font-size: clamp(1.1rem, 3.8vw, 2.2rem); margin-bottom: clamp(10px, 3vw, 24px); transform: rotate(.8deg); }
+  .contact-note .note a { color: inherit; text-decoration: none; width: max-content; transition: .15s ease; }
+  .contact-note .note a:hover { opacity: .65; transform: translateX(2px); }
+</style>
+</head>
+<body>
+
+  <div class="bg"></div>
+
+  <div class="postit-row">
+    <a class="navel" href="https://www.linkedin.com/in/vani-sahjwani/" aria-label="LinkedIn"><img class="art" src="assets/37.png" alt="LinkedIn" /></a>
+    <a class="navel" href="https://github.com/vsahjwani" aria-label="GitHub"><img class="art" src="assets/34.png" alt="GitHub" /></a>
+    <a class="navel" data-modal="contact" href="contact.html" aria-label="Email"><img class="art" src="assets/36.png" alt="Email" /></a>
+    <a class="navel" href="off-the-clock.html" aria-label="Back to Off the Clock"><img class="art" src="assets/38.png" alt="Back" /></a>
+  </div>
+
+  <div class="page">
+    <h1 class="title">Essays</h1>
+    <p class="intro">Papers I enjoyed writing regarding literature, media, and philosophy. Tap on sany to read the whole thing.</p>
+
+    <div class="theme">
+      <h2>Children's literature</h2>
+      <div class="cards">
+        <a class="paper" href="assets/essays/read/dulce-et-utile.html" target="_blank" rel="noopener">
+          <div class="h">Dulce et Utile</div>
+          <div class="course">Aesop &amp; Dr. Seuss: education and entertainment in the fables</div>
+          <span class="read">read ↗</span>
+        </a>
+        <a class="paper" href="assets/essays/read/flowers-and-poetry.html" target="_blank" rel="noopener">
+          <div class="h">Flowers and Poetry</div>
+          <div class="course">Carol Ann Duffy's subversion of the Grimms' "Little Red-Cap"</div>
+          <span class="read">read ↗</span>
+        </a>
+        <a class="paper" href="assets/essays/read/why-robinsons-right.html" target="_blank" rel="noopener">
+          <div class="h">Why Robinson's Right</div>
+          <div class="course">Defoe, ethos/pathos and colonial discourse in <i>Robinson Crusoe</i></div>
+          <span class="read">read ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="theme">
+      <h2>Wroth's sonnets</h2>
+      <div class="cards">
+        <a class="paper" href="assets/essays/read/wroth-writhing.html" target="_blank" rel="noopener">
+          <div class="h">Wroth Writhing</div>
+          <div class="course">The labyrinth motif &amp; female subjectivity in Mary Wroth's Sonnet 77</div>
+          <span class="read">read ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="theme">
+      <h2>Media &amp; the 2008 Mumbai attacks</h2>
+      <p class="sub">Regarding the Pain of Others</p>
+      <div class="cards">
+        <a class="paper" href="assets/essays/read/shots-of-mumbai.html" target="_blank" rel="noopener">
+          <div class="h">Shots of Mumbai in 2008</div>
+          <div class="course">How media coverage of 26/11 shaped memory: <i>Hotel Mumbai</i> vs <i>Terror in Mumbai</i></div>
+          <span class="read">read ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="theme">
+      <h2>Mexican philosophy</h2>
+      <div class="cards">
+        <a class="paper" href="assets/essays/Phil 155 Final Essay (1).pdf" target="_blank" rel="noopener">
+          <div class="h">José Vasconcelos</div>
+          <div class="course">Can Love Replace Law? Vasconcelos and the Problem of Social Unity</div>
+          <span class="read">read ↗ (pdf)</span>
+        </a>
+        <a class="paper" href="assets/essays/Phil 155 Midterm Essay (1).pdf" target="_blank" rel="noopener">
+          <div class="h">Las Casas Vs. Sepúlveda</div>
+          <div class="course">Who Has the Right to Conquer? Reason, Morality, and the Spanish Conquest of the Americas</div>
+          <span class="read">read ↗ (pdf)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT POPUP -->
+  <div class="modal" id="contactModal">
+    <div class="modal-backdrop" id="contactBackdrop"></div>
+    <div class="contact-note">
+      <img src="assets/39.png" alt="Sticky note" />
+      <div class="note">
+        <div class="line title">say hi!</div>
+        <a class="line row" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
+        <a class="line row" href="tel:6199539182">(619) 953-9182</a>
+        <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">linkedin.com</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+  function snd(src, vol) { var a = new Audio(src); a.preload = "auto"; a.volume = vol; return a; }
+  var sndHover = snd("hover.mp3", 0.55), sndClick = snd("click.mp3", 0.8);
+  function play(a) { try { a.currentTime = 0; var pr = a.play(); if (pr && pr.catch) pr.catch(function(){}); } catch(e){} }
+  var primed = false;
+  function prime() {
+    if (primed) return; primed = true;
+    [[sndHover,0.55],[sndClick,0.8]].forEach(function(p){ var a=p[0]; a.volume=0;
+      try { var pr=a.play(); if(pr&&pr.then) pr.then(function(){a.pause();a.currentTime=0;a.volume=p[1];}).catch(function(){a.volume=p[1];}); else a.volume=p[1]; } catch(e){ a.volume=p[1]; } });
+  }
+  ["pointerdown","touchstart","keydown"].forEach(function(ev){ window.addEventListener(ev, prime, {once:true, passive:true}); });
+  document.querySelectorAll(".navel, .paper").forEach(function(a){
+    a.addEventListener("mouseenter", function(){ play(sndHover); });
+    a.addEventListener("pointerdown", function(){ play(sndClick); });
+  });
+
+  var modal = document.getElementById("contactModal");
+  var backdrop = document.getElementById("contactBackdrop");
+  var emailBtn = document.querySelector('[data-modal="contact"]');
+  var last = null;
+  function open(){ last=document.activeElement; modal.classList.add("open"); }
+  function close(){ modal.classList.remove("open"); if(last&&last.focus) last.focus(); }
+  if (emailBtn) emailBtn.addEventListener("click", function(e){ e.preventDefault(); open(); });
+  backdrop.addEventListener("click", close);
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && modal.classList.contains("open")) close(); });
+})();
+</script>
+</body>
+</html>

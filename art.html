@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" type="image/png" href="assets/fav1.png" />
+<title>Art: Vani's Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"TC October"; src:url("assets/fonts/TcOctoberRegular-e9jgO.otf") format("opentype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+  html { background: #e9e6df; }
+  body { min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+  .bg { position: fixed; inset: 0; z-index: -1; background: url("assets/4.png") center center / cover no-repeat; }
+
+  .page { max-width: 1120px; margin: 0 auto; padding: 11vh 5vw 12vh; }
+  @media (max-width: 700px) { .page { padding: 10vh 5vw 10vh; } }
+
+  .title { font-family: "TC October", "Permanent Marker", cursive; font-size: clamp(2.6rem, 7.5vw, 4.6rem); color: #382c22; transform: rotate(-1deg); margin: 0 0 .05em; }
+  .intro { font-family: "Over the Rainbow", cursive; font-size: clamp(1rem, 2.4vw, 1.3rem); color: #4a3c2c; margin: 0 0 2em; max-width: 60ch; line-height: 1.6; }
+
+  .section-h { font-family: "CoalhandLuke", cursive; font-size: clamp(1.5rem, 4vw, 2.2rem); color: #6b4a2f; margin: 1.7em 0 .3em; transform: rotate(-.5deg); }
+  .section-sub { font-family: "Over the Rainbow", cursive; font-size: .95rem; color: #8a765c; margin: 0 0 1em; }
+
+  /* masonry-ish plates */
+  .plates { columns: 2; column-gap: 24px; }
+  @media (max-width: 640px) { .plates { columns: 1; } }
+  .plate {
+    break-inside: avoid; margin: 0 0 24px;
+    background: #fbf7ee; border: 1px solid rgba(56,44,34,.12);
+    border-radius: 3px; padding: 14px 14px 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.16);
+  }
+  .plate:nth-child(3n+1) { transform: rotate(-.5deg); }
+  .plate:nth-child(3n+2) { transform: rotate(.5deg); }
+  .plate .main { width: 100%; display: block; border-radius: 2px; cursor: zoom-in; }
+  .plate .row { display: flex; gap: 8px; margin-top: 8px; }
+  .plate .row img { width: 100%; flex: 1; object-fit: cover; height: 90px; border-radius: 2px; cursor: zoom-in; }
+  .plate .cap { margin-top: 10px; }
+  .plate .cap .t { font-family: "CoalhandLuke", cursive; font-size: 1.4rem; color: #2f251c; line-height: 1.05; }
+  .plate .cap .m { font-family: "Over the Rainbow", cursive; font-size: .88rem; color: #8a765c; margin-top: .15em; }
+  .plate .cap .c { font-family: "Over the Rainbow", cursive; font-size: .92rem; color: #4a3c2c; line-height: 1.5; margin-top: .55em; }
+
+  /* exhibition strip */
+  .strip { columns: 2; column-gap: 16px; }
+  @media (max-width: 640px) { .strip { columns: 1; } }
+  .strip img { width: 100%; display: block; margin: 0 0 16px; border-radius: 3px; box-shadow: 0 8px 18px rgba(0,0,0,.16); cursor: zoom-in; break-inside: avoid; }
+
+  /* documents, embedded + scrollable like the photography page */
+  .doc-frame {
+    background: #17130f; border-radius: 6px; padding: 12px;
+    box-shadow: 0 16px 40px rgba(0,0,0,.32); transform: rotate(-.25deg);
+    margin-bottom: .5em;
+  }
+  .doc-frame iframe { width: 100%; height: 78vh; min-height: 480px; border: 0; border-radius: 3px; background: #fff; display: block; }
+  .doc-openlink { font-family: "CoalhandLuke", cursive; color: #6b4a2f; font-size: 1.05rem; display: inline-block; margin: 0 0 1em; }
+  .doc-openlink:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* lightbox with per-artwork prev/next */
+  .lb { position: fixed; inset: 0; z-index: 80; background: rgba(20,16,12,.92); display: none; align-items: center; justify-content: center; padding: 4vh 4vw; }
+  .lb.open { display: flex; }
+  .lb-stage { position: relative; max-width: 100%; max-height: 100%; display: flex; align-items: center; justify-content: center; }
+  .lb img { max-width: 100%; max-height: 88vh; object-fit: contain; border-radius: 3px; box-shadow: 0 20px 60px rgba(0,0,0,.5); cursor: zoom-out; }
+  .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 46px; height: 46px; border-radius: 50%; border: none;
+    background: rgba(253,250,243,.9); color: #2f251c; font-size: 1.4rem;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,.35);
+  }
+  .lb-prev { left: -8px; } .lb-next { right: -8px; }
+  @media (max-width: 640px) { .lb-prev { left: 2px; } .lb-next { right: 2px; } }
+  .lb-count {
+    position: absolute; bottom: -34px; left: 50%; transform: translateX(-50%);
+    font-family: "CoalhandLuke", cursive; color: #f4ead8; font-size: 1.05rem;
+  }
+
+  /* post-its */
+  .postit-row { position: fixed; top: 3vh; right: 3vw; display: flex; gap: 2.4vw; z-index: 30; }
+  .navel { width: min(8.2vw, 64px); display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .navel .art { display: block; width: 100%; height: auto; pointer-events: none; -webkit-user-drag: none; user-select: none; transition: transform .12s ease, filter .1s ease; }
+  .navel:focus-visible { outline: none; }
+  .navel:hover .art, .navel:focus-visible .art { transform: scale(1.08); filter: drop-shadow( 2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(1.8px 1.8px 0 #fff) drop-shadow(-1.8px 1.8px 0 #fff) drop-shadow(1.8px -1.8px 0 #fff) drop-shadow(-1.8px -1.8px 0 #fff) drop-shadow(0 6px 9px rgba(0,0,0,.28)); }
+  @media (max-width: 700px) { .postit-row { flex-direction: column; top: 50%; right: 2vw; transform: translateY(-50%); gap: 2vh; } .navel { width: 44px; } }
+
+  /* ---- contact popup ---- */
+  .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop { position: absolute; inset: 0; background: transparent; cursor: pointer; }
+  .contact-note { position: relative; width: min(90vw, 420px); transform: rotate(2.8deg); }
+  .modal.open .contact-note { animation: pop .35s ease; }
+  .contact-note img { width: 100%; display: block; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+  @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.96) rotate(-2.8deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(-2.8deg); } }
+  .contact-note .note { position: absolute; inset: 0; padding: 15% 11%; display: flex; flex-direction: column; justify-content: flex-start; }
+  .contact-note .line { color: #575757; text-shadow: .25px .25px 0 rgba(0,0,0,.15); letter-spacing: .02em; line-height: 1.05; }
+  .contact-note .title { font-family: "CoalhandLuke", cursive; font-size: clamp(1.8rem, 6.5vw, 3.2rem); margin-bottom: clamp(14px, 4vw, 32px); transform: rotate(-1deg); }
+  .contact-note .row { font-family: "Over the Rainbow", cursive; font-size: clamp(1.1rem, 3.8vw, 2.2rem); margin-bottom: clamp(10px, 3vw, 24px); transform: rotate(.8deg); }
+  .contact-note .note a { color: inherit; text-decoration: none; width: max-content; transition: .15s ease; }
+  .contact-note .note a:hover { opacity: .65; transform: translateX(2px); }
+</style>
+</head>
+<body>
+
+  <div class="bg"></div>
+
+  <div class="postit-row">
+    <a class="navel" href="https://www.linkedin.com/in/vani-sahjwani/" aria-label="LinkedIn"><img class="art" src="assets/37.png" alt="LinkedIn" /></a>
+    <a class="navel" href="https://github.com/vsahjwani" aria-label="GitHub"><img class="art" src="assets/34.png" alt="GitHub" /></a>
+    <a class="navel" data-modal="contact" href="contact.html" aria-label="Email"><img class="art" src="assets/36.png" alt="Email" /></a>
+    <a class="navel" href="off-the-clock.html" aria-label="Back to Off the Clock"><img class="art" src="assets/38.png" alt="Back" /></a>
+  </div>
+
+  <div class="page">
+    <h1 class="title">Art</h1>
+    <p class="intro">As an introspective person, most of these pieces started from personal experience: questions about who I am, where I'm from, and where I might end up. Tap any image to see every photo of that piece.</p>
+
+    <div class="plates">
+      <div class="plate" data-piece="healthy-meal">
+        <img class="main" src="assets/art/web/healthy-meal-1.jpg" alt="A Healthy Meal" />
+        <div class="row">
+          <img src="assets/art/web/healthy-meal-3.jpg" alt="A Healthy Meal: alternate view" />
+          <img src="assets/art/web/healthy-meal-2.jpg" alt="A Healthy Meal: certification detail" />
+        </div>
+        <div class="cap">
+          <div class="t">A Healthy Meal</div>
+          <div class="m">Oil on canvas · 91.44 × 91.44 cm</div>
+          <div class="c">Inspired by Thukral &amp; Tagra's surrealism and Carol Ann Duffy's poem sitting with the contrast between a voiceless animal's dreams and how easily meat gets consumed today. The green gumball at the centre stands for our never-ending wants.</div>
+        </div>
+      </div>
+
+      <div class="plate" data-piece="portrait">
+        <img class="main" src="assets/art/web/va171.jpg" alt="Profile Picture" />
+        <div class="row"><img src="assets/art/web/va169.jpg" alt="Profile Picture on the easel" /></div>
+        <div class="cap">
+          <div class="t">Profile Picture</div>
+          <div class="m">Oil on canvas, round format</div>
+          <div class="c">On the theme of identity: to be yourself means doing what feels right, not what's expected of you. The circular canvas and centred face echo a social-media profile photo, the one image people pick to show the world who they are, and end up living up to. Black sunglasses bring a contemporary edge to otherwise sombre colours. The reference was a photo of my sister; I spent hours on the room reflected in her eyes and the creases of her lips.</div>
+        </div>
+      </div>
+
+      <div class="plate" data-piece="awash">
+        <img class="main" src="assets/art/web/awash-1.jpg" alt="Awash: piece 1" />
+        <div class="row">
+          <img src="assets/art/web/awash-2.jpg" alt="Awash: piece 2" />
+          <img src="assets/art/web/awash-3.jpg" alt="Awash: piece 3" />
+        </div>
+        <div class="cap">
+          <div class="t">Awash</div>
+          <div class="m">3 pieces, prints of pen-&amp;-ink drawings on paper + acrylic on glass · 37.4 × 32.3 cm each</div>
+          <div class="c">A study of a flush, moving with its formations and its swift, forceful movement. Detailed black-and-white pattern work contrasts the bold, unpredictable colour of the paint, holding both the structure and the chaos of the same instant.</div>
+        </div>
+      </div>
+
+      <div class="plate" data-piece="folk-flowers">
+        <img class="main" src="assets/art/web/folk-flowers-1.jpg" alt="Folk Flowers for Folk" />
+        <div class="row"><img src="assets/art/web/folk-flowers-2.jpg" alt="Folk Flowers for Folk: detail" /></div>
+        <div class="cap">
+          <div class="t">Folk Flowers for Folk</div>
+          <div class="m">Installation of paper flower prints in poster paint &amp; watercolour, glass mirror, wooden frame · 110 × 125 cm</div>
+          <div class="c">Drawing on folk-art traditions from across cultures including Tanjore, Ukiyo-e, Australian, Nianhu, Mexican, Warli, Gond, Hungarian, to show how universal flowers are used as a gift. Layered circular blooms hang overhead like a garden, doubled by a mirror below.</div>
+        </div>
+      </div>
+
+      <div class="plate" data-piece="tiger">
+        <img class="main" src="assets/art/web/va177.jpg" alt="Resurface" />
+        <div class="cap">
+          <div class="t">Resurface</div>
+          <div class="m">Graphite &amp; charcoal</div>
+          <div class="c">A tiger breaking the surface of the water, held there in fine tonal contrast, graphite for the soft mist, charcoal for the stripes.</div>
+        </div>
+      </div>
+
+      <div class="plate" data-piece="wheres-vani">
+        <img class="main" src="assets/art/web/wheres-vani-1.jpg" alt="Where's Vani: Singapore" />
+        <div class="row">
+          <img src="assets/art/web/wheres-vani-2.jpg" alt="Where's Vani: India" />
+          <img src="assets/art/web/wheres-vani-3.jpg" alt="Where's Vani: United States" />
+        </div>
+        <div class="cap">
+          <div class="t">Where's Vani</div>
+          <div class="m">Watercolour, ink &amp; colour pencil on cartridge paper · 65 × 46 cm</div>
+          <div class="c">Resonating with Waldo, when I made this piece I didn't know where I'd study, so I hid a smaller version of myself, sunglasses on and always running, in each of the three places I could have moved to: Singapore, India, and the United States, each drawn in a style true to its own culture.</div>
+        </div>
+      </div>
+
+      <div class="plate" data-piece="ever-forward">
+        <img class="main" src="assets/art/web/ever-forward.jpg" alt="Ever Forward" />
+        <div class="row"><img src="assets/art/web/ever-forward-2.jpg" alt="Ever Forward: alternate view" /></div>
+        <div class="cap">
+          <div class="t">Ever Forward</div>
+          <div class="m">Watercolour on cartridge paper · 60 × 48 cm</div>
+          <div class="c">Dreaming ahead without forgetting my roots. I painted myself by the Corinthian pillars I loved most about my school building, looking out into colourful uncertainty. Inspired by realist painter Shuchi Krishan.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-h">The exhibition</h2>
+    <p class="section-sub">Installation views from the final show</p>
+    <div class="strip" id="exhibitionStrip">
+      <img src="assets/art/web/exhibition-1.jpg" alt="Exhibition view" />
+      <img src="assets/art/web/va189.jpg" alt="Exhibition view" />
+      <img src="assets/art/web/exhibition-2.jpg" alt="Exhibition view" />
+      <img src="assets/art/web/va187.jpg" alt="Exhibition view" />
+    </div>
+
+    <h2 class="section-h">Comparative Study</h2>
+    <p class="section-sub">Analysing and comparing artworks &amp; artists</p>
+    <a class="doc-openlink" href="assets/art/SAHJWANI-A17785797-ComparitiveStudy.pdf" target="_blank" rel="noopener">open full-screen ↗</a>
+    <div class="doc-frame">
+      <iframe src="assets/art/SAHJWANI-A17785797-ComparitiveStudy.pdf#view=FitH" title="Comparative Study"></iframe>
+    </div>
+
+    <h2 class="section-h">Process Portfolio</h2>
+    <p class="section-sub">Sketchbook pages &amp; development work behind the final pieces</p>
+    <a class="doc-openlink" href="assets/art/process_portfolio.pdf" target="_blank" rel="noopener">open full-screen ↗</a>
+    <div class="doc-frame">
+      <iframe src="assets/art/process_portfolio.pdf#view=FitH" title="Process Portfolio"></iframe>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lb" id="lightbox">
+    <div class="lb-stage">
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous image" type="button">&#8249;</button>
+      <img id="lbimg" src="" alt="" />
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Next image" type="button">&#8250;</button>
+      <div class="lb-count" id="lbCount"></div>
+    </div>
+  </div>
+
+  <!-- CONTACT POPUP -->
+  <div class="modal" id="contactModal">
+    <div class="modal-backdrop" id="contactBackdrop"></div>
+    <div class="contact-note">
+      <img src="assets/39.png" alt="Sticky note" />
+      <div class="note">
+        <div class="line title">say hi!</div>
+        <a class="line row" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
+        <a class="line row" href="tel:6199539182">(619) 953-9182</a>
+        <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">linkedin.com</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+  function snd(src, vol) { var a = new Audio(src); a.preload = "auto"; a.volume = vol; return a; }
+  var sndHover = snd("hover.mp3", 0.55), sndClick = snd("click.mp3", 0.8);
+  function play(a) { try { a.currentTime = 0; var pr = a.play(); if (pr && pr.catch) pr.catch(function(){}); } catch(e){} }
+  var primed = false;
+  function prime() { if (primed) return; primed = true;
+    [[sndHover,0.55],[sndClick,0.8]].forEach(function(p){ var a=p[0]; a.volume=0;
+      try { var pr=a.play(); if(pr&&pr.then) pr.then(function(){a.pause();a.currentTime=0;a.volume=p[1];}).catch(function(){a.volume=p[1];}); else a.volume=p[1]; } catch(e){ a.volume=p[1]; } }); }
+  ["pointerdown","touchstart","keydown"].forEach(function(ev){ window.addEventListener(ev, prime, {once:true, passive:true}); });
+  document.querySelectorAll(".navel, .doc-openlink").forEach(function(a){
+    a.addEventListener("mouseenter", function(){ play(sndHover); });
+    a.addEventListener("pointerdown", function(){ play(sndClick); });
+  });
+
+  // ---- lightbox: click any artwork image -> browse every photo of that
+  // SAME piece (grouped by the .plate it lives in; the exhibition strip is
+  // its own single group) with prev/next + arrow keys. ----
+  var lb = document.getElementById("lightbox"), lbimg = document.getElementById("lbimg"),
+      lbPrev = document.getElementById("lbPrev"), lbNext = document.getElementById("lbNext"),
+      lbCount = document.getElementById("lbCount");
+  var curGroup = [], curIdx = 0;
+
+  function showLbImg() {
+    lbimg.src = curGroup[curIdx];
+    var multi = curGroup.length > 1;
+    lbPrev.style.display = lbNext.style.display = multi ? "flex" : "none";
+    lbCount.textContent = multi ? (curIdx + 1) + " / " + curGroup.length : "";
+  }
+  function openLb(urls, idx) { curGroup = urls; curIdx = idx; showLbImg(); lb.classList.add("open"); play(sndClick); }
+  function closeLb() { lb.classList.remove("open"); lbimg.src = ""; }
+  function nextImg(e) { if (e) e.stopPropagation(); curIdx = (curIdx + 1) % curGroup.length; showLbImg(); play(sndHover); }
+  function prevImg(e) { if (e) e.stopPropagation(); curIdx = (curIdx - 1 + curGroup.length) % curGroup.length; showLbImg(); play(sndHover); }
+
+  document.querySelectorAll(".plate").forEach(function (plate) {
+    var imgs = Array.prototype.slice.call(plate.querySelectorAll("img"));
+    var urls = imgs.map(function (im) { return im.src; });
+    imgs.forEach(function (im, i) {
+      im.addEventListener("click", function () { openLb(urls, i); });
+    });
+  });
+  (function () {
+    var strip = document.getElementById("exhibitionStrip");
+    var imgs = Array.prototype.slice.call(strip.querySelectorAll("img"));
+    var urls = imgs.map(function (im) { return im.src; });
+    imgs.forEach(function (im, i) {
+      im.addEventListener("click", function () { openLb(urls, i); });
+    });
+  })();
+
+  lbPrev.addEventListener("click", nextPrevWrap(prevImg));
+  lbNext.addEventListener("click", nextPrevWrap(nextImg));
+  function nextPrevWrap(fn) { return function (e) { fn(e); }; }
+  lb.addEventListener("click", function (e) { if (e.target === lb || e.target === lbimg) closeLb(); });
+
+  // contact popup
+  var modal = document.getElementById("contactModal");
+  var backdrop = document.getElementById("contactBackdrop");
+  var emailBtn = document.querySelector('[data-modal="contact"]');
+  var last = null;
+  function open(){ last=document.activeElement; modal.classList.add("open"); }
+  function close(){ modal.classList.remove("open"); if(last&&last.focus) last.focus(); }
+  if (emailBtn) emailBtn.addEventListener("click", function(e){ e.preventDefault(); open(); });
+  backdrop.addEventListener("click", close);
+
+  document.addEventListener("keydown", function (e) {
+    if (lb.classList.contains("open")) {
+      if (e.key === "Escape") closeLb();
+      else if (e.key === "ArrowRight") nextImg();
+      else if (e.key === "ArrowLeft") prevImg();
+      return;
+    }
+    if (e.key === "Escape" && modal.classList.contains("open")) close();
+  });
+})();
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <link rel="icon" type="image/png" href="assets/fav1.png" />
-<title>Professional — Vani's Archive</title>
+<title>Professional: Vani's Archive</title>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
@@ -38,12 +38,8 @@
     margin: 0 auto;
     padding: 11vh 7vw 14vh;
   }
-  /* On narrow viewports the content column reaches full width, so text
-     would otherwise scroll underneath the fixed postit row. Reserve a
-     matching strip on the right so it never does. Desktop is unaffected
-     since max-width already keeps the column clear of that corner. */
   @media (max-width: 700px) {
-    .page { padding-right: 150px; }
+    .page { padding: 10vh 4vw 6vh; }
   }
 
   /* Fixed top-right, same as experiences.html -- out of document flow
@@ -65,8 +61,8 @@
     margin: 0;
   }
 
-  .entry { margin-bottom: 3em; padding-bottom: 2.2em; border-bottom: 2px dashed rgba(56,44,34,.28); }
-  .entry:last-child { border-bottom: none; margin-bottom: 0; }
+  /* .entry layout is defined by the clothesline timeline sections below
+     (vertical line by default, horizontal line on wide screens). */
 
   .entry h2 {
     font-family: "CoalhandLuke", cursive;
@@ -93,14 +89,14 @@
   }
 
   .meta {
-    font-family: "Over the Rainbow", cursive;
-    font-size: 1.3rem;
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.15rem, 3.8vw, 1.55rem);
     color: #7a6a58;
     margin: 0 0 .7em;
   }
 
   .entry p:not(.meta) {
-    font-family: "Over the Rainbow", cursive;
+    font-family: "Geneva";
     font-size: clamp(1.05rem, 2.4vw, 1.35rem);
     line-height: 1.65;
     color: #3c2f24;
@@ -132,6 +128,234 @@
       drop-shadow( 1.8px  1.8px 0 #fff) drop-shadow(-1.8px  1.8px 0 #fff)
       drop-shadow( 1.8px -1.8px 0 #fff) drop-shadow(-1.8px -1.8px 0 #fff)
       drop-shadow( 0 6px 9px rgba(0,0,0,.28));
+  }
+
+  /* ==================== CLOTHESLINE TIMELINE ====================
+     Experiences hang from a twine clothesline held by wooden clothespins,
+     each on a kraft-paper note. The DEFAULT here is the VERTICAL line
+     (phones / narrow: line down the left, scroll down); the @media block
+     further down flips it to a HORIZONTAL line (wide: line across the top,
+     scroll sideways). */
+
+  .scroll-hint-h { display: none; }
+
+  .yr {
+    font-family: "CoalhandLuke", cursive;
+    color: #5a4a38;
+    white-space: nowrap;
+    z-index: 5;
+  }
+
+  /* each card is a kraft-paper note (44.png) with the text sitting on it */
+  .card {
+    position: relative;
+    background-image: url("assets/44.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color: #3c2f24;
+  }
+  /* small alternating tilt per card -- keeps it feeling hand-pinned rather
+     than machine-stamped, even though it's the same note image every time. */
+  .entry:nth-child(odd)  .card { transform: rotate(1.4deg); }
+  .entry:nth-child(even) .card { transform: rotate(-1.4deg); }
+
+  /* the node is a wooden clothespin (4 variants, cycled) */
+  .entry::before {
+    content: "";
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 6;
+  }
+  .entry:nth-child(4n+1)::before { background-image: url("assets/48.png"); }
+  .entry:nth-child(4n+2)::before { background-image: url("assets/49.png"); }
+  .entry:nth-child(4n+3)::before { background-image: url("assets/50.png"); }
+  .entry:nth-child(4n)::before   { background-image: url("assets/51.png"); }
+
+  /* attachment links (rec letter / presentation) */
+  .link {
+    display: inline-block;
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.05rem, 3.4vw, 1.4rem);
+    color: #6b4a2f;
+    text-decoration: none;
+    margin: .1em 0 .4em;
+    transition: opacity .15s ease, transform .15s ease;
+  }
+  .link:hover  { opacity: .65; transform: translateX(2px); }
+  .link:active { transform: translateX(3px); }
+
+  /* ---------- VERTICAL clothesline (default: twine down the left) ---------- */
+  .timeline {
+    position: relative;
+    background-image: url("assets/47.png");
+    background-repeat: repeat-y;
+    background-size: 20px auto;
+    background-position: 22px 6px;
+    padding-bottom: 4vh;
+  }
+  .entry {
+    position: relative;
+    padding-left: 72px;
+    margin: 0 0 30px;
+    border: none;
+  }
+  .yr {
+    position: absolute;
+    left: 0; top: 0;
+    width: 64px;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+  .entry::before {              /* clothespin clipped on the line */
+    position: absolute;
+    left: 32px; top: 30px;
+    transform: translateX(-50%);
+    width: 24px; height: 96px;
+  }
+  .card {
+    border-radius: 3px;
+    min-height: 150px;
+    padding: 26px 26px 28px;
+  }
+
+  /* ================= WIDE-SCREEN HORIZONTAL TIMELINE =================
+     Phones/tablets keep the normal stacked-and-scrolling column (all the
+     rules above). On wide screens the same entries become a horizontal
+     timeline that fills the viewport: a dated axis runs across the top with
+     a node per role, and each role's card hangs full-height beneath its
+     node -- so every blurb is visible at once and you travel the roles
+     sideways instead of scrolling down one long column. */
+  @media (min-width: 900px) {
+    body { overflow: hidden; }        /* the timeline scrolls, not the page */
+
+    .page {
+      max-width: none;
+      width: 100vw;
+      height: 100vh; height: 100svh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .title {
+      position: fixed;
+      top: 3.4vh;
+      left: 4vw;
+      margin: 0;
+      z-index: 15;
+    }
+
+    .timeline {
+      /* Note width/height computed with plain calc() (not the CSS
+         aspect-ratio property, which had inconsistent behavior across
+         browsers when combined with position:absolute + an auto dimension).
+         --note-h is the vertical budget below the clip; --note-w is derived
+         from it at 44.png's real 310:462 ratio, capped so it never gets
+         absurdly wide on a short-but-very-wide window. Both .entry and
+         .card read the same inherited variables, so they can never drift
+         out of sync with each other. */
+      --note-h: calc(100svh - 16vh - 114px);
+      --note-w: min(440px, calc(var(--note-h) * 310 / 462));
+      margin-top: 16vh;
+      height: calc(100svh - 16vh);
+      display: flex;
+      align-items: stretch;
+      gap: 34px;                 /* fixed, constant space between cards */
+      padding: 0 6vw;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: 6vw;
+      /* horizontal twine line near the top; background-attachment:local makes
+         it span the full scroll width and move with the content. */
+      background-image: url("assets/46.png");
+      background-repeat: repeat-x;
+      background-size: auto 30px;
+      background-position: 0 34px;
+      background-attachment: local;
+      scrollbar-width: thin;
+      scrollbar-color: #c8b18c transparent;
+    }
+    .timeline::-webkit-scrollbar { height: 4px; }
+    .timeline::-webkit-scrollbar-thumb { background: #c8b18c; border-radius: 999px; }
+
+    .entry {
+      flex: 0 0 var(--note-w);   /* exactly the note's width -- gap handles spacing */
+      height: 100%;
+      position: relative;
+      margin: 0;
+      padding: 0;
+      border: none;
+      scroll-snap-align: center;
+    }
+    /* year label, above the axis */
+    .yr {
+      display: block;
+      position: absolute;
+      top: 2px; left: 50%;
+      transform: translateX(-50%);
+      font-family: "CoalhandLuke", cursive;
+      font-size: 1.6rem;
+      color: #5a4a38;
+      z-index: 3;
+      white-space: nowrap;
+    }
+    /* clothespin clipping the card to the twine line */
+    .entry::before {
+      top: 30px; left: 50%; bottom: auto;
+      transform: translateX(-50%);
+      width: 20px; height: 64px;
+    }
+    /* (no separate connector stem -- the clothespin bridges line and card) */
+    .entry::after { content: none; }
+
+    /* Paper note hanging beneath the clothespin. Width/height are the same
+       --note-w/--note-h-derived values as .entry above (so it exactly fills
+       its entry, no centering math needed), which keeps the box locked to
+       44.png's real proportions -- background-size:cover then never has
+       anything to crop, so text can't spill past the visible paper edge.
+       top:100px clears the clothespin entirely (pin bottom sits at 94px) --
+       padding-top only protects the very FIRST line shown; once a card is
+       scrolled, later text slides up to the card's own top edge, so that
+       edge has to be below the pin, not just padding under it. */
+    .card {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: var(--note-w);
+      height: calc(var(--note-w) * 462 / 310);
+      max-height: calc(100% - 114px);
+      overflow-y: auto;         /* safety net for unusually short windows */
+      border-radius: 2px;
+      padding: 26px 26px 28px;
+      box-shadow: 4px 7px 12px rgba(0, 0, 0, 0.62);
+    }
+    .entry:nth-child(odd)  .card { transform: rotate(1.8deg); }
+    .entry:nth-child(even) .card { transform: rotate(-1.8deg); }
+    .card::-webkit-scrollbar { width: 6px; }
+    .card::-webkit-scrollbar-thumb { background: #8a6d4a; border-radius: 999px; }
+
+    /* tighten type so a full blurb fits its card */
+    .card h2          { font-size: 1.3rem; margin-bottom: .12em; }
+    .card .meta       { font-size: 1.05rem; margin-bottom: .35em; }
+    .card p:not(.meta){ font-size: .9rem; line-height: 1.5; }
+    .card .link       { font-size: 1.05rem; }
+
+    .scroll-hint-h {
+      display: block;
+      position: fixed;
+      top: 0.3vh; left: 50%;
+      transform: translateX(-50%);
+      font-family: "CoalhandLuke", cursive;
+      font-size: 1.15rem;
+      color: #4a3c2c;
+      opacity: .55;
+      z-index: 15;
+      pointer-events: none;
+    }
   }
 
   /* ---- contact popup (identical to the nav page) ---- */
@@ -205,49 +429,77 @@
   </div>
 
   <div class="page">
-    <h1 class="title">Professional</h1>
+    <h1 class="title">Professional Experiences</h1>
 
-    <div class="entry">
-      <h2>Data Science Associate <span class="badge">Present</span></h2>
-      <p class="meta">OPN Healthcare · Jul 2026 – Present · Glendale, CA</p>
-      <p>The uncomfortable part of patient stratification is that there's no ground truth to check yourself against — you're not predicting a label that eventually gets revealed, you're arguing that a clustering is meaningful at all. That's why most of this role has been about benchmarking, not modeling: running the same patient population through MDBSCAN, GMM, LCA, and Archetypal Analysis and asking which clusters are actually stable versus which ones just look convincing in one particular run. The most useful thing I've built isn't a single model, it's a way of engineering multi-source healthcare records into a dataset stable enough that the differences between methods reflect something real about patient similarity, not just noise in how the data was assembled. It's ongoing, but it's already reshaped how skeptical I am of any clustering result I can't stress-test.</p>
+    <div class="timeline">
+      <div class="entry">
+        <span class="yr">2026</span>
+        <div class="card">
+          <h2>Data Science Associate <span class="badge">Present</span></h2>
+          <p class="meta">OPN Healthcare · Jul 2026 – Present · Glendale, CA</p>
+          <p>The challenging part of patient stratification is that there's no ground truth to check the model against. The goal is to show that a cluster is meaningful without having a label to measure how apt the model is. That's why most of my role at OPN revolved around this role has been about benchmarking, not modeling: running the same patient population through MDBSCAN, GMM, LCA, and Archetypal Analysis and asking which clusters are actually stable versus which ones just look convincing in one particular run. The most useful thing I've built is a way of engineering multi-source healthcare records into a dataset stable enough that the differences between methods reflect something real about patient similarity. It's ongoing, but it's already reshaped how skeptical I am of the plethora of decisions made in data driven models.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="yr">2026</span>
+        <div class="card">
+          <h2>Software Engineer Intern</h2>
+          <p class="meta">BeautifulAI Inc. (Pearmes) · Apr – Jul 2026 · Remote</p>
+          <a class="link" href="https://drive.google.com/file/d/1z4bEA8G9qXujzx7oB5xFdFUQNvNg9DZF/view?usp=sharing">rec letter ↗</a>
+          <p>At an early-stage startup, the scraping pipelines I built were the dataset the entire product ran on, which meant a silent failure upstream broke things for everyone downstream. That pressure changed how I wrote code; reliability stopped being an abstraction and started being the difference between a normal Tuesday and a very bad one. I came in expecting to write software and left with a much better sense of how much of a startup's early direction is driven by understanding the most efficient way to optimise product-market fit.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="yr">2025</span>
+        <div class="card">
+          <h2>Quantitative Data Intern</h2>
+          <p class="meta">Alpha Alternatives · Jul – Aug 2025 · Mumbai</p>
+          <a class="link" href="https://drive.google.com/file/d/1k2adR81VRhuMMd6klvLM0E4zFuJbgfwo/view?usp=sharing">rec letter ↗</a>
+          <p>Most of this internship was spent on a problem I wish an intern could fix for me: the data that gives you a competitive edge is usually unformatted, not easy to obtain, and  exists in large amounts like mutual fund portfolios and bulk deals that mostly exist as heavily nonuniform PDFs and half-structured web pages. I built the scraping and parsing pipelines to fix that, which taught me that data engineering and data science aren't separate jobs, just two ends of the same problem. The part I found genuinely interesting was further downstream, using Ornstein–Uhlenbeck processes and Kalman filtering to model fund flows as a mean-reverting time series instead of a random walk. It reframed what I thought a "clean dataset" even meant: the millions of rows I'd normalized were only useful once I had a model that assumed something specific about how they moved over time. This reminded me of a quote by Steve Jobs I relate with as a Mathematics enjoyer: "If you define the problem correctly, you almost have the solution"</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="yr">2025</span>
+        <div class="card">
+          <h2>Tutor, Math Academic Success Center</h2>
+          <p class="meta">UC San Diego · Sep 2024 – Jun 2026 · Part-time</p>
+          <p>Tutoring turned out to be the best diagnostic I've had for whether I actually understand something because a confused student almost always finds or creates loopholes in an explanation. Students would often have the answers but were held back by their fear of being wrong. A lots of sessions ended up being less about the specific math methods and more about setting up the problem clearly, doing rough work, and always checking steps. While this experience doesn’t directly display qualities that my target roles seek, it taught me how to communicate by making intimidating concepts feel fun and simple.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="yr">2025</span>
+        <div class="card">
+          <h2>Data Science Intern</h2>
+          <p class="meta">IDXExchange · Jun – Aug 2025</p>
+          <a class="link" href="#">presentation ↗</a>
+          <p>This was the first time I was responsible for a team's output, and it changed how I thought about the modelling. Benchmarking Linear Regression against Random Forest against XGBoost for property price prediction is a well-worn exercise, but leading the intern team through it meant the real work was making sure everyone's piece: the feature engineering, the EDA, the eventual model actually fit together and were logically executed so that no inconsistencies overflowed into the project. During each meeting I prepared what we had to review and our takeaways to ensure that we were on track and so that we could discuss decisions regarding handling missingness, high skews, etc. I also enjoyed the experience of discussing the pros and cons of why certain models could represent our data better and how could we innovatively create something that really used our data to its full potential.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="yr">2024</span>
+        <div class="card">
+          <h2>Wealth Management Intern</h2>
+          <p class="meta">Kredere Wealth Partners · Jul – Aug 2024 · Mumbai</p>
+          <p>This was my first real look at how much of wealth management is just disciplined reading. Every morning started the same way, Economic Times, Financial Times, Trading Economics, and turned into a digest that someone senior would use to talk to a client that day. What surprised me was how little room there was for a hot take; a mutual fund report only mattered if I could show my reasoning held up against the last six months of data, not just the last headline. Working alongside my mentor on Indian mutual fund research taught me the difference between summarizing a market and having a position on it, and how much more careful you have to be once your writing might shape someone else's portfolio.</p>
+        </div>
+      </div>
+
+      <div class="entry">
+        <span class="yr">2022</span>
+        <div class="card">
+          <h2>Market Research Intern</h2>
+          <p class="meta">Samyog Health Foods · Jun – Sep 2022 · Mumbai</p>
+          <p>This was my first project where the data came from conversations with real customers instead of a downloaded dataset; I designed and ran surveys to figure out whether Prolicious could realistically expand into a new market. The uncomfortable lesson was that people are bad at predicting their own behavior; what respondents said they'd buy and what the follow-up questions revealed about their actual habits didn't always line up, and learning to trust the second one over the first was most of the analysis. It was a small project, but it's the reason I still think about the gap between stated and revealed preference before I trust any survey number at face value.</p>
+        </div>
+      </div>
     </div>
 
-    <div class="entry">
-      <h2>Software Engineer Intern</h2>
-      <p class="meta">Stealth AI Startup · Apr – Jul 2026 · Remote</p>
-      <p>At an early-stage startup, the scraping pipelines I built weren't a side tool for someone else's analysis — they were the dataset the entire product ran on, which meant a silent failure upstream broke things for everyone downstream, immediately. That pressure changed how I wrote code; reliability stopped being an abstraction and started being the difference between a normal Tuesday and a very bad one. The bigger shift was being in the room for product decisions, not just execution — prototyping a feature, watching it get picked apart in feedback, and rebuilding it the same week. I came in expecting to write software and left with a much better sense of how much of a startup's early direction gets decided in those small, fast iterations rather than in any single big decision.</p>
-    </div>
-
-    <div class="entry">
-      <h2>Quantitative Data Intern</h2>
-      <p class="meta">Alpha Alternatives · Jul – Aug 2025 · Mumbai</p>
-      <p>Most of this internship was spent on a problem nobody puts in a textbook: the data you actually need — mutual fund portfolios, bulk deals — mostly exists as PDFs and half-structured web pages, not clean tables. I built the scraping and parsing pipelines to fix that, which taught me that data engineering and data science aren't really separate jobs, just two ends of the same problem. The part I found genuinely interesting was further downstream — using Ornstein–Uhlenbeck processes and Kalman filtering to model fund flows as a mean-reverting time series instead of a random walk. It reframed what I thought a "clean dataset" even meant: the millions of rows I'd normalized were only useful once I had a model that assumed something specific about how they moved over time.</p>
-    </div>
-
-    <div class="entry">
-      <h2>Data Science Intern</h2>
-      <p class="meta">IDXExchange · Jun – Aug 2025</p>
-      <p>This was the first time I was responsible for a team's output, not just my own, and it changed how I thought about the modeling. Benchmarking Linear Regression against Random Forest against XGBoost for property price prediction is a well-worn exercise, but leading the intern team through it meant the real work was making sure everyone's piece — the feature engineering, the geospatial EDA, the eventual model — actually fit together instead of just existing in separate notebooks. The test that mattered most wasn't the standard train/test split; it was validating on months the model hadn't seen yet, a much less forgiving way to find out whether an R² is real or just memorized. Presenting the results to senior data scientists and getting sent back to iterate more than once was its own lesson in how much a model's first version is really just a draft.</p>
-    </div>
-
-    <div class="entry">
-      <h2>Wealth Management Intern</h2>
-      <p class="meta">Kredere Wealth Partners · Jul – Aug 2024 · Mumbai</p>
-      <p>This was my first real look at how much of wealth management is just disciplined reading. Every morning started the same way — Economic Times, Financial Times, Trading Economics — and turned into a digest that someone senior would actually use to talk to a client that day. What surprised me was how little room there was for a hot take; a mutual fund report only mattered if I could show my reasoning held up against the last six months of data, not just the last headline. Working alongside my mentor on Indian mutual fund research taught me the difference between summarizing a market and actually having a position on it — and how much more careful you have to be once your writing might shape someone else's portfolio.</p>
-    </div>
-
-    <div class="entry">
-      <h2>Tutor, Math Academic Success Center</h2>
-      <p class="meta">UC San Diego · Sep 2024 – Jun 2026 · Part-time</p>
-      <p>Tutoring turned out to be the best diagnostic I've had for whether I actually understand something, because a room full of students will find the gap in your explanation faster than any professor will. The students who struggled most were rarely missing the mechanics — they could follow the steps — what they were missing was confidence that they were allowed to get it wrong on the way to getting it right. Most sessions ended up being less about the specific problem on the page and more about getting someone to try an approach they weren't sure about yet. It's a strange thing to put next to internships on a resume, but explaining the same concept five different ways until one of them lands taught me more about communicating technical work clearly than most of the technical work itself did.</p>
-    </div>
-
-    <div class="entry">
-      <h2>Market Research Intern</h2>
-      <p class="meta">Samyog Health Foods · Jun – Sep 2022 · Mumbai</p>
-      <p>This was my first project where the data came from actual conversations instead of a downloaded dataset — I designed and ran surveys to figure out whether Prolicious could realistically expand into a new market. The uncomfortable lesson was that people are bad at predicting their own behavior; what respondents said they'd buy and what the follow-up questions revealed about their actual habits didn't always line up, and learning to trust the second one over the first was most of the analysis. It was a small project, but it's the reason I still think about the gap between stated and revealed preference before I trust any survey number at face value.</p>
-    </div>
+    <div class="scroll-hint-h">scroll sideways →</div>
   </div>
 
   <!-- CONTACT POPUP -->
@@ -295,6 +547,31 @@
     a.addEventListener("mouseenter", function () { play(sndHover); });
     a.addEventListener("pointerdown", function () { play(sndClick); });
   });
+
+  // Wide-screen timeline: a vertical mouse wheel drives the horizontal
+  // travel -- BUT if the pointer is over a card that can still scroll in the
+  // wheel's direction, let the card scroll first (nested scroll), and only
+  // move the timeline sideways once the card hits its top/bottom. Trackpads
+  // already scroll both axes natively; this is mainly for mouse wheels.
+  var timeline = document.querySelector(".timeline");
+  if (timeline) {
+    var wideMQ = window.matchMedia("(min-width: 900px)");
+    timeline.addEventListener("wheel", function (e) {
+      if (!wideMQ.matches) return;            // vertical view uses native page scroll
+      var card = e.target.closest ? e.target.closest(".card") : null;
+      if (card) {
+        var canScroll = card.scrollHeight > card.clientHeight + 1;
+        var atTop = card.scrollTop <= 0;
+        var atBottom = card.scrollTop + card.clientHeight >= card.scrollHeight - 1;
+        if (canScroll && ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop))) {
+          return;                             // let the card scroll vertically
+        }
+      }
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; // already horizontal
+      timeline.scrollLeft += e.deltaY;        // otherwise travel the timeline sideways
+      e.preventDefault();
+    }, { passive: false });
+  }
 
   // --- contact popup (identical behavior to the nav page) ---
   var contactModal    = document.getElementById("contactModal");

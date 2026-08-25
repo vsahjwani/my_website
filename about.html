@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <link rel="icon" type="image/png" href="assets/fav1.png" />
-<title>About — Vani's Archive</title>
+<title>About: Vani's Archive</title>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
@@ -15,17 +15,15 @@
   @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; min-height: 100%; }
+  html, body { margin: 0; padding: 0; height: 100%; }
   html { background: #e9e6df; }
   body {
-    min-height: 100vh;
+    height: 100%;
+    overflow: hidden;           /* the frame-text scrolls, not the page */
     -webkit-tap-highlight-color: transparent;
   }
-  /* A fixed, full-viewport background element instead of `background-attachment:
-     fixed` on body -- the latter forces Safari to repaint the whole background
-     on every scroll frame, which is a well-known source of scroll jank on pages
-     with a large cover image like this one. This gets the same pinned-background
-     look with none of the repaint cost. */
+
+  /* Corkboard backdrop, same as the nav/experiences pages. */
   .bg {
     position: fixed;
     inset: 0;
@@ -33,21 +31,140 @@
     background: url("assets/5.png") center center / cover no-repeat;
   }
 
-  .page {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 11vh 7vw 14vh;
+  /* 52.png (open notebook, native 1366x768 landscape) sits on top of the
+     corkboard, shown at full uncropped size via the same centered "fit"
+     technique used for the home/nav boards elsewhere on the site. .frame-img
+     is the on-screen FOOTPRINT box (landscape on wide, rotated-to-portrait
+     on narrow); .frame-img-art is the actual image layer inside it -- on
+     narrow screens that layer is sized landscape (matching the image's real
+     shape) and then rotated 90deg, which exactly fills the portrait
+     footprint (rotating a 1366:768 box 90deg produces exactly a 768:1366
+     footprint, so the two formulas are reciprocals of each other by
+     construction). .frame-text stays UNROTATED so the text itself is never
+     sideways -- it's positioned directly against the footprint box, with
+     its insets swapped 90deg to match wherever the rotated page area now
+     sits on screen (local left/top/right/bottom -> screen top/right/bottom/
+     left under a clockwise rotation). */
+  .frame-img {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width:  min(100vw, calc(100svh * 1366 / 768));
+    height: min(100svh, calc(100vw  * 768 / 1366));
+    z-index: 1;
   }
-  /* On narrow viewports the content column reaches full width, so text
-     would otherwise scroll underneath the fixed postit row. Reserve a
-     matching strip on the right so it never does. Desktop is unaffected
-     since max-width already keeps the column clear of that corner. */
-  @media (max-width: 700px) {
-    .page { padding-right: 150px; }
+  .frame-img-art {
+    position: absolute;
+    inset: 0;
+    background: url("assets/52.png") center center / contain no-repeat;
+  }
+  @media (max-width: 899px) {
+    .frame-img {
+      width:  min(100vw, calc(100svh * 768 / 1366));
+      height: min(100svh, calc(100vw  * 1366 / 768));
+    }
+    .frame-img-art {
+      inset: auto;
+      top: 50%; left: 50%;
+      width:  min(100svh, calc(100vw * 1366 / 768));
+      height: min(100vw,  calc(100svh * 768 / 1366));
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
   }
 
-  /* Fixed top-right, same as experiences.html -- out of document flow
-     entirely, so it never costs vertical space or wraps. */
+  /* The scrollable text lives in a transparent box positioned over the
+     image's actual light page area -- percentages of .frame-img. Pixel-
+     measured from 52.png (clear of the binder clips): x:17.6-84.2%,
+     y:3.3-98.3% of its 1366x768 canvas -- used directly (unrotated) on wide
+     screens; swapped 90deg (top<->right, bottom<->left) on narrow screens
+     to track the rotated image. Vertical scroll only -- overflow-x is
+     hidden, nothing here should scroll sideways. */
+  .frame-text {
+    position: absolute;
+    top: 8%; bottom: 8%;
+    left: 19%; right: 17%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow-wrap: break-word;   /* so overflow-x:hidden never silently clips text */
+    padding: 1.5vh 0;
+  }
+  @media (max-width: 899px) {
+    .frame-text { top: 19%; right: 8%; bottom: 17%; left: 8%; }
+  }
+  .frame-text::-webkit-scrollbar { width: 6px; }
+  .frame-text::-webkit-scrollbar-thumb { background: #b9a988; border-radius: 999px; }
+
+  /* ---- dark ink type, tuned for the light paper/panel backgrounds ---- */
+  .title {
+    font-family: "Permanent Marker", cursive;
+    font-size: clamp(2.1rem, 6vw, 3.4rem);
+    color: #2f251c;
+    transform: rotate(-1.2deg);
+    margin: 0 0 .1em;
+  }
+
+  .subtitle {
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.05rem, 2.6vw, 1.4rem);
+    color: #5a4a38;
+    letter-spacing: .01em;
+    margin: 0 0 1.4em;
+  }
+
+  .body p {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1rem, 2.2vw, 1.28rem);
+    line-height: 1.6;
+    color: #3c2f24;
+    margin: 0 0 1.2em;
+  }
+
+  .whats-here { margin-top: 1.8em; }
+  .whats-here .lead {
+    font-family: "Besom", "Permanent Marker", cursive;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    color: #382c22;
+    transform: rotate(-.6deg);
+    margin: 0 0 .6em;
+  }
+  .whats-here ul { list-style: none; margin: 0; padding: 0; }
+  .whats-here li {
+    font-family: "Over the Rainbow", cursive;
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    line-height: 1.45;
+    color: #3c2f24;
+    margin-bottom: .55em;
+    padding-left: 1.1em;
+    position: relative;
+  }
+  .whats-here li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: #6b4a2f;
+  }
+  /* the required links: clearly underlined, with a tiny arrow */
+  .whats-here li a {
+    font-weight: 700;
+    color: #5a3a22;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+    transition: opacity .15s ease;
+  }
+  .whats-here li a::after {
+    content: " \2197";          /* ↗ */
+    text-decoration: none;
+    display: inline-block;
+    font-size: .82em;
+  }
+  .whats-here li a:hover  { opacity: .6; }
+  .whats-here li a:active { opacity: .8; }
+
+  /* postits (linkedin/github/email/nav-back), same visual language as the
+     other pages. On narrow screens they run down the right edge in a single
+     vertical column instead of a wide horizontal row, so they cover less of
+     the frame image underneath. */
   .postit-row {
     position: fixed;
     top: 3vh;
@@ -56,64 +173,14 @@
     gap: 2.4vw;
     z-index: 20;
   }
-
-  .title {
-    font-family: "Permanent Marker", cursive;
-    font-size: clamp(2.6rem, 7.5vw, 4.6rem);
-    color: #fdfaf3;
-    text-shadow: 0 0 16px rgba(0,0,0,.55), 0 0 34px rgba(0,0,0,.35), 2px 2px 0 rgba(0,0,0,.25);
-    transform: rotate(-1.5deg);
-    margin: 0;
+  @media (max-width: 899px) {
+    .postit-row {
+      flex-direction: column;
+      top: 50%;
+      transform: translateY(-50%);
+      gap: 2.2vh;
+    }
   }
-
-  .subtitle {
-    font-family: "CoalhandLuke", cursive;
-    font-size: clamp(1.15rem, 3vw, 1.6rem);
-    color: #fdfaf3;
-    text-shadow: 0 0 12px rgba(0,0,0,.5), 1px 1px 0 rgba(0,0,0,.28);
-    letter-spacing: .02em;
-    transform: rotate(.6deg);
-    margin: 0 0 2em;
-  }
-
-  .body p {
-    font-family: "Over the Rainbow", cursive;
-    font-size: clamp(1.15rem, 2.6vw, 1.5rem);
-    line-height: 1.6;
-    color: #fdfaf3;
-    text-shadow: 0 0 10px rgba(0,0,0,.5), 1px 1px 0 rgba(0,0,0,.3);
-    margin: 0 0 1.35em;
-  }
-
-  .whats-here { margin-top: 2.2em; }
-  .whats-here .lead {
-    font-family: "Besom", "Permanent Marker", cursive;
-    font-size: clamp(1.5rem, 3.6vw, 2.1rem);
-    color: #fdfaf3;
-    text-shadow: 0 0 14px rgba(0,0,0,.55), 1px 1px 0 rgba(0,0,0,.3);
-    transform: rotate(-.8deg);
-    margin: 0 0 .7em;
-  }
-  .whats-here ul { list-style: none; margin: 0; padding: 0; }
-  .whats-here li {
-    font-family: "Over the Rainbow", cursive;
-    font-size: clamp(1.2rem, 2.9vw, 1.65rem);
-    line-height: 1.4;
-    color: #fdfaf3;
-    text-shadow: 0 0 9px rgba(0,0,0,.5), 1px 1px 0 rgba(0,0,0,.3);
-    margin-bottom: .55em;
-    padding-left: 1.3em;
-    position: relative;
-  }
-  .whats-here li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-  }
-  .whats-here li b { font-weight: 700; }
-
-  /* postits (linkedin/github/email/nav-back), same visual language as the
-     other pages. */
   .navel {
     width: min(8.2vw, 68px);
     display: block;
@@ -209,25 +276,29 @@
     <a class="navel" id="a-nav" href="index.html#nav" aria-label="Back to nav page"><img class="art" src="assets/38.png" alt="Nav" /></a>
   </div>
 
-  <div class="page">
+  <div class="frame-img">
+  <div class="frame-img-art"></div>
+  <div class="frame-text">
     <h1 class="title">About Me</h1>
-    <p class="subtitle">math + data science, UC San Diego</p>
+    <p class="subtitle">I'm Vani, a math and data science student at UC San Diego, graduating March/June 2027 and looking for full time roles in data science, ML, or  quant.</p>
 
     <div class="body">
-      <p>I'm Vani — a math and data science student at UC San Diego, spending most of my time somewhere between a Jupyter notebook and a piano bench.</p>
-      <p>Most of what I build starts the same way: something looks off, nobody asked me to fix it, and I can't leave it alone. That's how I ended up writing an optimization model for a tutoring program's broken shift schedule, or double-checking five million financial records before trusting what they said. I like the part of the work where a number stops being a guess and starts being something you'd actually bet on.</p>
-      <p>Right now I'm looking for quant, data science, or applied ML roles — places where the models I build get used to make real decisions, instead of sitting in a slide deck somewhere. What I want out of that is to be learning fast enough that going back for a graduate degree in operations research or statistics feels like the natural next step, not a retreat.</p>
-      <p>Outside of that, I play piano, take photos, paint, and read more than is strictly useful for a math major — enough that I started a reading club just to have people to argue about books with.</p>
+      <p>I spend most of my time working with models the way a scientist would: deciding which questions are worth asking, then figuring out how to pragmatically pull relevant inferences out of complex data. I enjoying challenging problems of optimizing systems and using data driven estimations to make decisions. I learn things fast and I'm often asking questions led by my curiosity.</p>
+      <p>What I want out of these roles is to apply my skills in a way that contributes to something larger, whether that's a trading system, a product, or a team's decisions. I'm going into industry first because I want to build something with real stakes before I decide how to shape my further studies in operations research, statistics, or ML.</p>
+      <p>Outside of that, I play piano, dabble in photography, and paint, probably more than is useful for a math major.</p>
     </div>
 
     <div class="whats-here">
       <p class="lead">What's here</p>
       <ul>
-        <li><b>Projects</b> — models I built because I wanted the answer, failures included</li>
-        <li><b>Experience</b> — internships across finance, real estate, and wealth management, told properly instead of as resume bullets</li>
-        <li><b>Off the Clock</b> — piano, photography, and painting, because that's part of the story too</li>
+        <li><a href="projects.html">Projects</a>: models I've built solo and with teams</li>
+        <li><a href="experiences.html">Experiences</a>: my work with data in healthcare, finance, and more</li>
+        <li><a href="https://drive.google.com/file/d/1dZZIDktKosJerowUmCIa-zAu-b4q9KWc/view?usp=sharing" target="_blank" rel="noopener">Resume</a>: the one-page version, always current</li>
+        <li><a href="off-the-clock.html">Off the Clock</a>: piano, photography, painting, and whatever else I'm doing</li>
+        <li><a href="contact.html" data-modal="contact">Contact me</a>: say hi, I don't bite</li>
       </ul>
     </div>
+  </div>
   </div>
 
   <!-- CONTACT POPUP -->
@@ -276,14 +347,17 @@
     a.addEventListener("pointerdown", function () { play(sndClick); });
   });
 
-  // --- contact popup (identical behavior to the nav page) ---
+  // --- contact popup (identical behavior to the nav page). Two triggers now
+  // share data-modal="contact" -- the postit AND the "Contact me" link in
+  // What's here -- so bind all matches, not just the first. ---
   var contactModal    = document.getElementById("contactModal");
   var contactBackdrop = document.getElementById("contactBackdrop");
-  var emailBtn        = document.querySelector('[data-modal="contact"]');
-  var lastFocused     = null;
+  var lastFocused      = null;
   function openModal() { lastFocused = document.activeElement; contactModal.classList.add("open"); }
   function closeModal() { contactModal.classList.remove("open"); if (lastFocused && lastFocused.focus) lastFocused.focus(); }
-  if (emailBtn) emailBtn.addEventListener("click", function (e) { e.preventDefault(); openModal(); });
+  document.querySelectorAll('[data-modal="contact"]').forEach(function (btn) {
+    btn.addEventListener("click", function (e) { e.preventDefault(); openModal(); });
+  });
   contactBackdrop.addEventListener("click", closeModal);
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && contactModal.classList.contains("open")) closeModal();
