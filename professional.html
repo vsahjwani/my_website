@@ -8,11 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
-  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/The_Girl_Next_Door/TheGirlNextDoor-Regular.ttf") format("truetype"); font-display:swap; }
   @font-face { font-family:"TC October"; src:url("assets/fonts/TcOctoberRegular-e9jgO.otf") format("opentype"); font-display:swap; }
-  /* Swapped out for KG Makes You Stronger (Kimberly Geswein) in place of the
-     CoalhandLuke trial font, which wasn't licensed for web embedding. */
-  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format("truetype"); font-display:swap; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; min-height: 100%; }
@@ -68,7 +66,7 @@
     font-family: "CoalhandLuke", cursive;
     font-weight: normal;
     font-size: clamp(1.55rem, 3.8vw, 2.15rem);
-    color: #2f251c;
+    color: black;
     margin: 0 0 .2em;
     line-height: 1.2;
   }
@@ -91,7 +89,7 @@
   .meta {
     font-family: "CoalhandLuke", cursive;
     font-size: clamp(1.15rem, 3.8vw, 1.55rem);
-    color: #7a6a58;
+    color: #382c22;
     margin: 0 0 .7em;
   }
 
@@ -445,7 +443,7 @@
         <span class="yr">2026</span>
         <div class="card">
           <h2>Software Engineer Intern</h2>
-          <p class="meta">BeautifulAI Inc. (Pearmes) · Apr – Jul 2026 · Remote</p>
+          <p class="meta">Beautiful Ai Inc. (Pearmes) · Apr – Jul 2026 · Remote</p>
           <a class="link" href="https://drive.google.com/file/d/1z4bEA8G9qXujzx7oB5xFdFUQNvNg9DZF/view?usp=sharing">rec letter ↗</a>
           <p>At an early-stage startup, the scraping pipelines I built were the dataset the entire product ran on, which meant a silent failure upstream broke things for everyone downstream. That pressure changed how I wrote code; reliability stopped being an abstraction and started being the difference between a normal Tuesday and a very bad one. I came in expecting to write software and left with a much better sense of how much of a startup's early direction is driven by understanding the most efficient way to optimise product-market fit.</p>
         </div>
@@ -540,7 +538,7 @@
       } catch (e) { a.volume = pair[1]; }
     });
   }
-  ["pointerdown", "touchstart", "keydown"].forEach(function (ev) {
+  ["pointerdown", "touchstart", "keydown", "wheel"].forEach(function (ev) {
     window.addEventListener(ev, primeAudio, { once: true, passive: true });
   });
   document.querySelectorAll(".navel").forEach(function (a) {

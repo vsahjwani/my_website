@@ -8,9 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
-  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/The_Girl_Next_Door/TheGirlNextDoor-Regular.ttf") format("truetype"); font-display:swap; }
   @font-face { font-family:"TC October"; src:url("assets/fonts/TcOctoberRegular-e9jgO.otf") format("opentype"); font-display:swap; }
-  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format("truetype"); font-display:swap; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; min-height: 100%; }
@@ -123,7 +123,7 @@
   function prime() { if (primed) return; primed = true;
     [[sndHover,0.55],[sndClick,0.8]].forEach(function(p){ var a=p[0]; a.volume=0;
       try { var pr=a.play(); if(pr&&pr.then) pr.then(function(){a.pause();a.currentTime=0;a.volume=p[1];}).catch(function(){a.volume=p[1];}); else a.volume=p[1]; } catch(e){ a.volume=p[1]; } }); }
-  ["pointerdown","touchstart","keydown"].forEach(function(ev){ window.addEventListener(ev, prime, {once:true, passive:true}); });
+  ["pointerdown","touchstart","keydown","wheel"].forEach(function(ev){ window.addEventListener(ev, prime, {once:true, passive:true}); });
   document.querySelectorAll(".navel").forEach(function(a){
     a.addEventListener("mouseenter", function(){ play(sndHover); });
     a.addEventListener("pointerdown", function(){ play(sndClick); });

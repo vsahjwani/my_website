@@ -8,11 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
   @font-face { font-family:"Besom"; src:url("assets/fonts/Besom-Handwritten-Brush-Font/Besom-Handwritten-Brush-Font.ttf") format("truetype"); font-display:swap; }
-  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/The_Girl_Next_Door/TheGirlNextDoor-Regular.ttf") format("truetype"); font-display:swap; }
   @font-face { font-family:"TC October"; src:url("assets/fonts/TcOctoberRegular-e9jgO.otf") format("opentype"); font-display:swap; }
-  /* Swapped out for KG Makes You Stronger (Kimberly Geswein) in place of the
-     CoalhandLuke trial font, which wasn't licensed for web embedding. */
-  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format("truetype"); font-display:swap; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; min-height: 100%; }
@@ -212,19 +210,19 @@
     <h1 class="title">Projects</h1>
 
     <div class="project">
-      <h2>SoCalGuessr: Street-Level City Classification</h2>
+      <h2>SoCal Guessr: Street-Level City Classification</h2>
       <p>What stuck with me about this project is that two street photos from different Southern California cities can look almost identical to a person, yet the model I built tells them apart correctly 80% of the time. The patterns that separate one city from another are there in the data, we just aren't built to see them the way a model can. To get there, I engineered 255 vision features from 9,100+ street-level images, using HOG, LBP, and Gabor filters to capture texture and edge information, then reduced that feature space with PCA and kept the strongest signals with ANOVA. On top of those features, I trained a regularized feedforward neural network in PyTorch, using BatchNorm, Dropout, Adam, and early stopping to keep it from overfitting, for the final 6-way city classification.</p>
     </div>
 
     <div class="project">
       <h2>Seafood &amp; Health: Predictive Modeling</h2>
-      <a class="link" href="https://kareenf04.github.io/seafood_health_analysis/" target="_blank" rel="noopener">kareenf04.github.io/seafood_health_analysis</a>
+      <a class="link" href="https://kareenf04.github.io/seafood_health_analysis/" target="_blank" rel="noopener">github.io/seafood_health_analysis</a>
       <p>Through this project I learnt that good feature engineering can lead to the simplest and most accurate models. The question behind this project was whether seafood was distinctly healthy. After a little bit of research, creating nutritional blend feature of high protein, relatively low calories, and a unsaturated fat led use to the answer. I quantified that blend as a composite health score across 83,000 recipes, and once that feature existed, the rest of the problem became much simpler. A Decision Tree, tuned with GridSearchCV, used that health score to predict whether a recipe contained seafood with 92.1% test accuracy.</p>
     </div>
 
     <div class="project">
       <h2>Rent the Runway: Fit Prediction</h2>
-      <a class="link" href="https://github.com/vsahjwani/cse-158" target="_blank" rel="noopener">github.com/vsahjwani/cse-158</a>
+      <a class="link" href="https://github.com/vsahjwani/cse-158" target="_blank" rel="noopener">github.com/rent_the_runway</a>
       <p>This was a four-person team project, and we coordinated the whole thing remotely, across different cities and schedules. What made it work was treating the collaboration itself as seriously as the modeling: we kept the codebase clean and reproducible, checked in with each other frequently, pushed continuous updates instead of one big handoff at the end, and ran peer evaluations to hold everyone to the same standard. On the technical side, I combined TF-IDF text features from 192,000 user reviews with engineered numerical features like BMI and body ratios, then trained a Gradient Boosting ensemble, tuning it with RandomizedSearchCV and benchmarking it against random forest baselines. The final model reached 77.06% accuracy, 9 points above the prior published state of the art.</p>
     </div>
 
@@ -272,7 +270,7 @@
       } catch (e) { a.volume = pair[1]; }
     });
   }
-  ["pointerdown", "touchstart", "keydown"].forEach(function (ev) {
+  ["pointerdown", "touchstart", "keydown", "wheel"].forEach(function (ev) {
     window.addEventListener(ev, primeAudio, { once: true, passive: true });
   });
   document.querySelectorAll(".navel").forEach(function (a) {

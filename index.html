@@ -6,8 +6,8 @@
 <link rel="icon" type="image/png" href="assets/fav1.png" />
 <title>Vani's Archive</title>
 <style>
-  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/Over_the_Rainbow/OvertheRainbow-Regular.ttf") format("truetype"); font-display:swap; }
-  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/kimberly-geswein_kg-makes-you-stronger/KGMakesYouStronger.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/The_Girl_Next_Door/TheGirlNextDoor-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format("truetype"); font-display:swap; }
   /* ============================================================
      Vani's Archive — portfolio landing
      - Home page (paper + polaroid + title)
@@ -375,6 +375,21 @@
     current = idx;
   }
   showFrame(0);
+
+  // Warm the cache for the rest of the frames in the background, during
+  // idle time, so the first scroll through the transition doesn't have to
+  // fetch+decode each PNG right as it's about to appear.
+  (function preloadRemainingFrames() {
+    var i = 1;
+    function step() {
+      if (i >= COUNT) return;
+      loadFrame(i++);
+      if (window.requestIdleCallback) requestIdleCallback(step, { timeout: 200 });
+      else setTimeout(step, 60);
+    }
+    if (window.requestIdleCallback) requestIdleCallback(step, { timeout: 500 });
+    else setTimeout(step, 300);
+  })();
 
   var home = document.getElementById("home");
   var nav  = document.getElementById("nav");
