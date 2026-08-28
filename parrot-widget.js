@@ -16,24 +16,23 @@
   // ---- CONFIG: replace with your deployed Render URL ----
   var PARROT_API_URL = "https://vani-chatbot.onrender.com/chat";
   var PARROT_IMG = "assets/parrot.png"; // put the parrot PNG here
+  var PARROT_2_IMG = 'assets/56.png'
 
   // ---------------------------------------------------------
   // Styles
   // ---------------------------------------------------------
   var style = document.createElement("style");
   style.textContent = [
-    "#parrotWidget{position:fixed;right:clamp(12px,3vw,32px);bottom:clamp(12px,3vw,32px);z-index:80;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}",
+    "#parrotWidget{position:fixed;right:clamp(0px,0.11vw,20px);bottom:clamp(276px,68vh,700px);z-index:80;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;transform:scale(1.06)}",
 
-    "#parrotBtn{width:clamp(64px,9vw,96px);height:auto;cursor:pointer;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.28));transition:transform .15s ease;user-select:none;-webkit-user-drag:none;}",
-    "#parrotBtn:hover{transform:scale(1.06) rotate(-2deg);}",
-    "#parrotBtn:active{transform:scale(0.97) rotate(1deg);}",
+    "#parrotBtn{width:clamp(106px,26vw,240px);height:auto;cursor:pointer;display:block;filter:drop-shadow(1px 2px 1px rgba(0,0,0,.75));user-select:none;-webkit-user-drag:none;}",
 
-    "#parrotBubble{position:absolute;bottom:calc(100% + 10px);right:0;width:min(88vw,360px);max-height:min(70vh,520px);background:#fdfbf4;border-radius:18px 18px 4px 18px;box-shadow:0 10px 30px rgba(0,0,0,.22);transform:rotate(-1deg) translateY(8px) scale(.96);transform-origin:bottom right;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;display:flex;flex-direction:column;overflow:hidden;}",
-    "#parrotBubble.open{opacity:1;pointer-events:auto;transform:rotate(-1deg) translateY(0) scale(1);}",
-    "#parrotBubble::after{content:'';position:absolute;bottom:-9px;right:22px;width:20px;height:20px;background:#fdfbf4;transform:rotate(45deg) rotate(-1deg);box-shadow:3px 3px 6px rgba(0,0,0,.05);}",
+    "#parrotBubble{position:absolute;top:calc(100% + 10px);right:0;width:min(88vw,300px);max-height:min(70vh,520px);background:#fdfbf4;border-radius:18px 18px 4px 18px;box-shadow:0 10px 30px rgba(0,0,0,.22);transform:translateY(-8px) scale(.56);transform-origin:top right;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;display:flex;flex-direction:column;overflow:hidden;}",
+    "#parrotBubble.open{opacity:1;pointer-events:auto;transform: translateY(0) scale(0.9);}",
+    "#parrotBubble::after{content:'';position:absolute;top:-9px;right:22px;width:20px;height:20px;background:#fdfbf4;box-shadow:-3px -3px 6px rgba(0,0,0,.05);}",
 
-    "#parrotHeader{padding:14px 16px 10px;border-bottom:1px dashed #d8d2c2;display:flex;align-items:center;justify-content:space-between;}",
-    "#parrotTitle{font-family:'CoalhandLuke',cursive;font-size:1.5rem;color:#3c5c3a;transform:rotate(-1deg);}",
+    "#parrotHeader{padding:3px 3px 1px;border-bottom:1px dashed #d8d2c2;display:flex;align-items:center;justify-content:space-between;}",
+    "#parrotTitle{font-family:'CoalhandLuke',cursive;font-size:1.5rem;color:#3c5c3a;}",
     "#parrotClose{background:none;border:none;font-size:1.1rem;color:#8a8577;cursor:pointer;padding:2px 6px;line-height:1;}",
     "#parrotClose:hover{color:#3c3c3c;}",
 
@@ -50,7 +49,12 @@
     "#parrotSend:hover{background:#4d6845;}",
     "#parrotSend:disabled{opacity:.5;cursor:default;}",
 
-    "@media (max-aspect-ratio:1/1){#parrotBubble{right:-4px;width:min(92vw,340px);}}"
+    "@media (max-aspect-ratio:1/1){",
+    "#parrotWidget{bottom:clamp(12px,3vh,40px);}",
+    "#parrotBubble{right:-4px;width:min(92vw,340px);top:auto;bottom:calc(100% + 10px);transform-origin:bottom right;transform:translateY(8px) scale(.56);}",
+    "#parrotBubble.open{transform:translateY(0) scale(0.9);}",
+    "#parrotBubble::after{top:auto;bottom:-9px;box-shadow:3px 3px 6px rgba(0,0,0,.05);}",
+    "}"
   ].join("\n");
   document.head.appendChild(style);
 
@@ -108,6 +112,8 @@
   btn.addEventListener("click", function () {
     bubble.classList.contains("open") ? closeBubble() : openBubble();
   });
+  btn.addEventListener("mouseenter", function () { btn.src = PARROT_2_IMG; });
+  btn.addEventListener("mouseleave", function () { btn.src = PARROT_IMG; });
   closeBtn.addEventListener("click", closeBubble);
 
   document.addEventListener("click", function (e) {
