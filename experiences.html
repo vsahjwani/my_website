@@ -7,7 +7,7 @@
 <title>Experiences: Vani's Archive</title>
 <style>
   @font-face { font-family:"Over the Rainbow"; src:url("assets/fonts/The_Girl_Next_Door/TheGirlNextDoor-Regular.ttf") format("truetype"); font-display:swap; }
-  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/Cedarville_Cursive/CedarvilleCursive-Regular.ttf") format("truetype"); font-display:swap; }
+  @font-face { font-family:"CoalhandLuke"; src:url("assets/fonts/The_Girl_Next_Door/TheGirlNextDoor-Regular.ttf") format("truetype"); font-display:swap; }
   /* Experiences page — mirrors the nav page: corkboard backdrop + a board
      that scales/reflows to any screen, elements with the same white-outline
      hover and the same hover/click sounds. */
@@ -143,6 +143,9 @@
     margin-bottom: clamp(10px, 3vw, 24px);
     transform: rotate(.8deg);
   }
+  .contact-note .small {
+    font-size: clamp(0.9rem, 3.1vw, 1.8rem);
+  }
   .contact-note .note a {
     color: inherit; text-decoration: none;
     width: max-content; transition: .15s ease;
@@ -180,7 +183,7 @@
       <img src="assets/39.png" alt="Sticky note" />
       <div class="note">
         <div class="line title">say hi!</div>
-        <a class="line row" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
+        <a class="line row small" href="mailto:vanisahjwani@gmail.com">vanisahjwani@gmail.com</a>
         <a class="line row" href="tel:6199539182">(619) 953-9182</a>
         <a class="line row" href="https://www.linkedin.com/in/vani-sahjwani/">linkedin.com</a>
       </div>
