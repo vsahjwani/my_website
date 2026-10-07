@@ -105,6 +105,19 @@
     margin: 0;
   }
 
+  /* attachment links (e.g. link to articles) */
+  .link {
+    display: inline-block;
+    font-family: "CoalhandLuke", cursive;
+    font-size: clamp(1.05rem, 3.4vw, 1.4rem);
+    color: #6b4a2f;
+    text-decoration: none;
+    margin: .1em 0 .4em;
+    transition: opacity .15s ease, transform .15s ease;
+  }
+  .link:hover  { opacity: .65; transform: translateX(2px); }
+  .link:active { transform: translateX(3px); }
+
   /* postits (linkedin/github/email/nav-back), same visual language as the
      other pages. */
   .navel {
@@ -223,6 +236,7 @@
     <div class="entry">
       <h2>Online Content Writer</h2>
       <p class="meta">Data Science Student Society at UCSD · Part-time · Oct 2024 – Jun 2025</p>
+      <a class="link" href="https://medium.com/@vsahjwani" target="_blank" rel="noopener">link to articles ↗</a>
       <p>Most of what I wrote for DS3 was aimed at people earlier in the data science pipeline than me: explaining a concept, breaking down a tool, translating something I'd just learned into something a first-year could actually use. It turned out to be a good forcing function as I couldn't write clearly about PCA or a model's assumptions until I could explain why they mattered. Writing for an audience that would immediately notice if I was faking understanding was a great evalutation criteria.</p>
     </div>
   </div>
